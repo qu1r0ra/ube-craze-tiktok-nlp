@@ -10,21 +10,26 @@ This registry tracks the datasets generated during the scraping and preprocessin
 
 ## Scraped Videos Log
 
-This section will list the 30 scraped TikTok video IDs, authors, titles, and comment counts once Phase 2 runs.
+This section will list the 67 scraped TikTok video IDs, authors, titles, and comment counts once Phase 2 runs.
 
 | Video ID | Author | Description / Topic               | Total Comments Scraped | Scraped Date |
 | :------- | :----- | :-------------------------------- | :--------------------- | :----------- |
 |          |        | _(To be populated post-scraping)_ |                        |              |
 
-## Search Methodology & Keywords
+## Search Methodology & Sampling Strategy
 
-The following keywords are used to identify and select the top 30 highest-engagement ube-related videos on TikTok within the target period (2024–2026):
+The dataset is selected using a **Keyword-Based Purposive Sampling** strategy targeting TikTok videos published between 2024 and 2026. A total of **67 videos** were curated for scraping.
 
-1. **`ube`** (Baseline keyword)
-2. **`ube craze`** (Trend & viral popularity)
-3. **`filipino ube`** (Gastronationalism & cultural origins)
-4. **`trader joes ube`** (Corporate commodification & westernization)
-5. **`foreigner tries ube`** (Cross-cultural tasting reactions)
-6. **`purple yam`** (Alternative botanical/English term)
-7. **`ube pronunciation`** (Language debate, "oob" vs "oo-beh" controversy)
-8. **`ube taste test`** (Sensory appreciation & comparison)
+### Sampling Criteria
+
+1. **Search Keywords**: Videos were searched using the following query terms:
+   - `ube`
+   - `ube craze`
+   - `trader joes ube`
+   - `foreigner tries ube`
+   - `purple yam`
+   - `ube pronunciation`
+2. **Engagement & Discussion Quality (Manual Verification)**:
+   - **Like Verification**: Prioritized videos with relatively high like counts within each search query to ensure high reach and visibility.
+   - **Discussion Scanning**: Scanned comment feeds to verify that the video generated active, meaningful, and relevant dialogue (such as discussions of cultural authenticity, heritage representation, or consumption behavior) rather than generic spam.
+3. **Excluded Keywords**: Keywords like `filipino ube` and `ube taste test` were removed from active query lists as they did not yield distinct or significant additional search results.

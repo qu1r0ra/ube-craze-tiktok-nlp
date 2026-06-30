@@ -2,12 +2,12 @@
 
 Living document for agent-to-agent and session-to-session continuity for the GEWORLD (The Contemporary World) Ube Craze TikTok NLP project.
 
-| Field                  | Value                                                          |
-| ---------------------- | -------------------------------------------------------------- |
-| **Last updated**       | 2026-06-30                                                     |
-| **Last session focus** | Workspace scaffolding and technical stack definition           |
-| **Active repo**        | `ube-craze-tiktok-nlp`                                         |
-| **Blockers**           | Scraper implementation pending video URL inputs in `links.txt` |
+| Field                  | Value                                                                                                                                                                        |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Last updated**       | 2026-06-30                                                                                                                                                                   |
+| **Last session focus** | Resolved scraper scrolling bug, added new analyses (bigrams, trigrams, K-Means clustering, and reply sentiment alignment heatmaps) and verified the full pipeline end-to-end |
+| **Active repo**        | `ube-craze-tiktok-nlp`                                                                                                                                                       |
+| **Blockers**           | None (code is verified and ready for bulk scraping)                                                                                                                          |
 
 ---
 
@@ -17,7 +17,7 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 2. Read the approved proposal in [docs/proposal.md](docs/proposal.md).
 3. Read this file end-to-end, then review the implementation queue in [Section 5](#5-implementation-queue).
 4. Run `uv sync` to ensure your virtual environment is synchronized.
-5. Populate `links.txt` at the root with 50 target TikTok video URLs (done by developer).
+5. Populate `links.txt` at the root with 67 target TikTok video URLs (done by developer).
 6. Run `uv run python -m ube_craze_nlp.scraper.engine` to scrape metadata and comment payloads.
 7. Run preprocessing, sentiment analysis, and visualization notebooks in the `notebooks/` directory.
 8. Before ending a session, update this file and update `AGENTS.md` to record status.
@@ -44,7 +44,7 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 | :------------------ | :----------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Data Source**     | TikTok only                          | Constrained to TikTok comments and metadata based on Scope and Limitations (6-week timeline).                                                                                   |
 | **Scraper Style**   | Playwright + Network Interception    | Intercepts JSON responses from TikTok's API endpoints. Automatically triggers the Comments tab and scrolls using updated `CommentMain` selectors to bypass 'You may like' tabs. |
-| **Scraper Inputs**  | `links.txt` file                     | List of exactly 50 high-engagement video URLs to ensure human relevance and bypass search walls.                                                                                |
+| **Scraper Inputs**  | `links.txt` file                     | List of exactly 67 high-engagement video URLs to ensure human relevance and bypass search walls.                                                                                |
 | **NLP Language**    | English, Tagalog, and Taglish        | Filtered using `lingua-language-detector` to discard other languages.                                                                                                           |
 | **Sentiment Model** | `twitter-xlm-roberta-base-sentiment` | Multilingual transformer executed locally offline for robust mixed-language (Taglish) sentiment.                                                                                |
 | **Packaging**       | `uv` with Hatchling backend          | Replicates professional standard; package root resolved dynamically. Includes `requests` package.                                                                               |
@@ -71,29 +71,30 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 
 ### Phase 4: Jupyter Notebooks & Visualizations [Complete]
 
-- Notebooks `01` through `04` fully generated and documented.
+- Notebooks `01` through `04` fully generated, documented, and updated with advanced NLP sections (Bigrams, Trigrams, K-Means clustering, and Sentiment transition heatmap). All visualizations verified.
 
 ---
 
 ## 5. Implementation Queue
 
-|  P  | Task                                                                  | Component | Status |
-| :-: | :-------------------------------------------------------------------- | :-------- | :----- |
-|  1  | Create scraper engine (`engine.py`) and response parser (`parser.py`) | Scraper   | [x]    |
-|  2  | Setup `links.txt` template and run test scrape                        | Scraper   | [x]    |
-|  3  | Implement language filtering & text normalization (`nlp/clean.py`)    | NLP       | [x]    |
-|  4  | Implement local XLM-RoBERTa sentiment model (`nlp/sentiment.py`)      | NLP       | [x]    |
-|  5  | Write pytest test suites for scraper & text processors                | Tests     | [x]    |
-|  6  | Create Jupyter Notebooks 01 through 04                                | Notebooks | [x]    |
-|  7  | Generate sentiment visualization plots and export                     | Outputs   | [x]    |
-|  8  | Add 50 target video URLs to `links.txt` and execute pipeline          | Execution | [ ]    |
+|  P  | Task                                                                                        | Component | Status |
+| :-: | :------------------------------------------------------------------------------------------ | :-------- | :----- |
+|  1  | Create scraper engine (`engine.py`) and response parser (`parser.py`)                       | Scraper   | [x]    |
+|  2  | Setup `links.txt` template and run test scrape                                              | Scraper   | [x]    |
+|  3  | Implement language filtering & text normalization (`nlp/clean.py`)                          | NLP       | [x]    |
+|  4  | Implement local XLM-RoBERTa sentiment model (`nlp/sentiment.py`)                            | NLP       | [x]    |
+|  5  | Write pytest test suites for scraper & text processors                                      | Tests     | [x]    |
+|  6  | Create Jupyter Notebooks 01 through 04                                                      | Notebooks | [x]    |
+|  7  | Generate sentiment visualization plots and export                                           | Outputs   | [x]    |
+|  8  | Add 67 target video URLs to `links.txt` and execute pipeline                                | Execution | [ ]    |
+|  9  | Implement bigram/trigram, unsupervised clustering, and reply sentiment interaction analysis | Analysis  | [x]    |
 
 ---
 
 ## 6. Environment and Secrets
 
 - Create a `.env` file at the root if environment variables (e.g. proxy credentials, logging levels) are added.
-- **`links.txt`**: Created at the root directory; populate with 50 TikTok video URLs.
+- **`links.txt`**: Created at the root directory; populate with 67 TikTok video URLs.
 
 ---
 
