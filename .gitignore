@@ -1,6 +1,5 @@
 # Local Data and Visualizations
 data/
-outputs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
