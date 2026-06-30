@@ -31,3 +31,10 @@ This project explores **digital gastronationalism** on TikTok regarding the glob
 
 5. **Paths**:
    - Never use hardcoded absolute paths in scripts. Use `src/ube_craze_nlp/utils/paths.py` or `pathlib.Path` relative to the project root.
+   - All markdown documentation files must use relative file links instead of local `file:///` absolute paths.
+
+6. **No Emojis in Code**:
+   - Emojis must not be used in Python files, scripts, or codebase files (such as console print/log prefixes or code comments). Emojis are only permitted in tests for emoji-heavy comment parsing.
+
+7. **Logging over Print**:
+   - Use Python's built-in `logging` module with a module-level logger (`logger = logging.getLogger(__name__)`) for library modules and execution runners instead of calling `print()` directly.
