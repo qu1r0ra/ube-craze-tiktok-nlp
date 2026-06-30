@@ -24,8 +24,13 @@ An analysis of Filipino digital gastronationalism on TikTok, specifically focusi
   - [4.2. Step 2: Preprocessing \& Language Filtering](#42-step-2-preprocessing--language-filtering)
   - [4.3. Step 3: Sentiment Analysis](#43-step-3-sentiment-analysis)
   - [4.4. Step 4: NLP Analysis \& Visualization](#44-step-4-nlp-analysis--visualization)
-- [5. NLP Methodology \& Model](#5-nlp-methodology--model)
-- [6. License](#6-license)
+- [5. Key Visualizations \& Results](#5-key-visualizations--results)
+  - [5.1. Sentiment Distribution](#51-sentiment-distribution)
+  - [5.2. Topic Clustering (K=7, TF-IDF + LSA)](#52-topic-clustering-k7-tf-idf--lsa)
+  - [5.3. Phrase Frequencies (N-Grams)](#53-phrase-frequencies-n-grams)
+  - [5.4. Reply Sentiment Dynamics](#54-reply-sentiment-dynamics)
+- [6. NLP Methodology \& Model](#6-nlp-methodology--model)
+- [7. License](#7-license)
 
 ## 1. Introduction & Background
 
@@ -138,11 +143,81 @@ Open `notebooks/04_visualization.ipynb` to run:
 - **Sentiment Heatmap**: Creating transition matrices plotting parent comments vs. reply sentiments to analyze how replies align with or contest parent threads.
 - **Result Visuals**: Automatically exporting plots and documents to the reorganized `outputs/` subdirectories.
 
-## 5. NLP Methodology & Model
+Alternatively, you can run the entire pipeline from Step 2 onwards in one go using the pipeline script:
+
+```bash
+# On Windows (avoids emoji console crashes)
+$env:PYTHONIOENCODING="utf-8"; uv run python scripts/run_pipeline.py
+
+# On macOS/Linux
+uv run python scripts/run_pipeline.py
+```
+
+## 5. Key Visualizations & Results
+
+Below are key visualizations and takeaways extracted from the final dataset of **6,137 unique English, Tagalog, and Taglish comments** harvested across the 67 video targets:
+
+### 5.1. Sentiment Distribution
+
+Using `twitter-xlm-roberta-base-sentiment`, the overall sentiment breakdown reveals a highly contested online discourse rather than passive aesthetic enjoyment:
+
+<p align="center">
+  <img src="outputs/plots/sentiment_distribution.png" alt="Sentiment Distribution" width="70%">
+</p>
+
+- **Neutral (35.8%)**: Educational remarks, ingredient questions, botanical comparisons, and simple culinary descriptions.
+- **Negative (33.8%)**: Backlash against mispronunciations (e.g. "oob"), frustration over cultural gentrification (the "matcha-fication" of ube), and socioeconomic critiques regarding the neglect of local Filipino farmers.
+- **Positive (30.4%)**: Cultural pride, food enjoyment, culinary advocacy, and welcoming foreigners attempting to try or cook traditional desserts.
+
+### 5.2. Topic Clustering (K=7, TF-IDF + LSA)
+
+Unsupervised K-Means clustering identifies seven distinct thematic arenas:
+
+| Cluster       | Core Theme                             | Gastronationalist Implication                                                                                                                     |
+| :------------ | :------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Cluster 0** | **Pronunciation Correction**           | Language as a gatekeeper of cultural respect. Commenters actively correct foreigners to preserve authentic naming (`oohbeh` vs. `oob`).           |
+| **Cluster 1** | **Mainstream Catch-All & Economy**     | Focuses on socioeconomic realities, criticizing domestic agricultural neglect, farmer exploitation, and local shortages amidst global popularity. |
+| **Cluster 2** | **Appreciation & Labor**               | Global culinary enjoyment paired with notes on how labor-intensive traditional ube halaya prep actually is.                                       |
+| **Cluster 3** | **"Oob" Backlash & Memes**             | Highly emotional defensive reactions and memes targeting viral mispronunciations.                                                                 |
+| **Cluster 4** | **"Matcha-fication" & Gentrification** | Anxieties that ube will be gentrified by corporate entities (e.g., Starbucks) without cultural recognition or returns.                            |
+| **Cluster 5** | **Culinary Boundaries (Ube vs. Taro)** | Actively resisting cheap commercial substitutions of ube with taro powder and purple dye.                                                         |
+| **Cluster 6** | **Botanical & Technical Accuracy**     | Educational correction clarifying that ube is a purple yam (`Dioscorea alata`), not a sweet potato or taro.                                       |
+
+Here is the distribution of sentiment across these clusters:
+
+<p align="center">
+  <img src="outputs/clusters/cluster_sentiment_stacked.png" alt="Sentiment Stacked by Cluster" width="80%">
+</p>
+
+### 5.3. Phrase Frequencies (N-Grams)
+
+Examining multi-word phrases (bigrams/trigrams) highlights the primary linguistic markers:
+
+<p align="center">
+  <img src="outputs/plots/word_frequency_bigrams.png" alt="Bigram Frequencies" width="90%">
+</p>
+
+- **Cultural Authenticity**: Phrases like `ube halaya`, `purple yam`, and `filipino dessert` assert cultural roots.
+- **Commercialization & Substitution**: Phrases like `taro taste` and `matcha latte` signal discussions around flavor boundaries and product gentrification.
+
+### 5.4. Reply Sentiment Dynamics
+
+A sentiment transition matrix tracks the relationship between parent comments and their nested replies, illustrating how conflict is negotiated:
+
+<p align="center">
+  <img src="outputs/plots/reply_sentiment_heatmap.png" alt="Reply Sentiment Heatmap" width="70%">
+</p>
+
+- **Negative Parent Trigger**: Negative parents generate the highest rate of negative replies (45.3%), showing that criticism or cultural friction sparks intense digital defensiveness or correction.
+- **Positive Parent Synergy**: Positive parent comments are met with positive replies (45.9%), reflecting supportive spaces where digital gastronationalism acts as a source of community bonding and soft power.
+
+For more detailed qualitative analysis and specific comment samples from each cluster, see [outputs/docs/cluster_insights.md](outputs/docs/cluster_insights.md).
+
+## 6. NLP Methodology & Model
 
 - **Sentiment Model**: CardiffNLP's [twitter-xlm-roberta-base-sentiment](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment) is a multilingual XLM-RoBERTa transformer fine-tuned on ~198M multilingual tweets. It handles mixed-language text (such as code-switching Taglish common in Filipino online spaces) much more robustly than English-only Lexicon models (e.g., VADER).
 - **Language Support**: Filters inputs using `lingua-language-detector` set to retain `ENGLISH` and `TAGALOG` text, ensuring unrelated foreign commentary (e.g., Indonesian, Spanish, Portuguese) does not pollute the dataset.
 
-## 6. License
+## 7. License
 
 This project is licensed under the **Apache License 2.0**. See the [LICENSE](LICENSE) file for the full text.
