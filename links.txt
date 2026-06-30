@@ -1,15 +1,84 @@
 # Paste your TikTok video URLs here (one URL per line).
 # Lines starting with '#' are ignored by the scraper.
 # Example:
-# https://www.tiktok.com/@cnn/video/7637043281548856590
-https://www.tiktok.com/@bnc.ph/video/7650435756334255381
+# https://www.tiktok.com/@user/video/1234567890123456789
 
-# Study Search Keywords:
-# 1. ube
-# 2. ube craze
-# 3. filipino ube
-# 4. trader joes ube
-# 5. foreigner tries ube
-# 6. purple yam
-# 7. ube pronunciation
-# 8. ube taste test
+# Search Keywords:
+# ube
+https://www.tiktok.com/@justtonch/video/7640099629484510484?q=ube
+https://www.tiktok.com/@bnc.ph/video/7649421989114940692?q=ube
+https://www.tiktok.com/@erwan/video/7652304168119569682?q=ube
+https://www.tiktok.com/@thefliphq/video/7629365696555830535?q=ube
+https://www.tiktok.com/@bitesofvancouver/video/7490347763658607927?q=ube
+https://www.tiktok.com/@priceless/video/7353716817740778798?q=ube
+https://www.tiktok.com/@eulahexplains/video/7614371516238613767?q=ube
+https://www.tiktok.com/@godsprincesss30/video/7611534322591354134?q=ube
+https://www.tiktok.com/@iankewks/video/7631972323679063304?q=ube
+https://www.tiktok.com/@pohui_plus_pohui0/video/7649757461053820181?q=ube
+https://www.tiktok.com/@xtrememimi/video/7614272794553093390?q=ube
+https://www.tiktok.com/@bnc.ph/video/7650435756334255381?q=ube
+https://www.tiktok.com/@arawlondon/video/7568523925383105814?q=ube
+https://www.tiktok.com/@charmiejanee/video/7624489818944277783?q=ube
+https://www.tiktok.com/@leilarfn/video/7629226105278336286?q=ube
+https://www.tiktok.com/@dom.skii/video/7626538022644862229?q=ube
+https://www.tiktok.com/@russyap/video/7635620812334271765?q=ube
+https://www.tiktok.com/@konstantinzsigo/video/7616084559217675534?q=ube
+
+# ube craze
+https://www.tiktok.com/@onefilipinotv/video/7647848903337053463?q=ube%20craze
+https://www.tiktok.com/@cnn/video/7637043281548856590?q=ube%20craze
+https://www.tiktok.com/@njdotcom/video/7431583584768675118?q=ube%20craze
+https://www.tiktok.com/@kristinarodulfo/video/7631745049180572941?q=ube%20craze
+https://www.tiktok.com/@news5everywhere/video/7629680148282969364?q=ube%20craze
+https://www.tiktok.com/@foodfindsryan/video/7614663706043059487?q=ube%20craze
+https://www.tiktok.com/@pictureperfectluis/video/7625306500772220190?q=ube%20craze
+https://www.tiktok.com/@spiceymac/video/7617153947555466509?q=ube%20craze
+https://www.tiktok.com/@smollpol/video/7561434566712642837?q=ube%20craze
+https://www.tiktok.com/@sylviakimkorea/video/7636796256186092820?q=ube%20craze
+https://www.tiktok.com/@mau.wrob/video/7619899577293917460?q=ube%20craze
+https://www.tiktok.com/@samkimarchives/video/7643830807689170197?q=ube%20craze
+https://www.tiktok.com/@jarofhibiscuss/video/7615481203948358914?q=ube%20craze
+https://www.tiktok.com/@chariza_/video/7519223374422281494?q=ube%20craze
+
+# trader joes ube
+https://www.tiktok.com/@eatsbyrachel/video/7360534922873900319?q=trader%20joes%20ube
+https://www.tiktok.com/@eatsbyrachel/video/7522213513859796254?q=trader%20joes%20ube
+https://www.tiktok.com/@jeanelleats/video/7250017610648128810?q=trader%20joes%20ube
+https://www.tiktok.com/@_._kathy_._/video/7610204457997012238?q=trader%20joes%20ube
+
+# foreigner tries ube
+https://www.tiktok.com/@isabelle199xxx/video/7623742923674291478?q=foreigner%20tries%20ube
+https://www.tiktok.com/@mukbangwithkay/video/7508116696666803502?q=foreigner%20tries%20ube
+https://www.tiktok.com/@charmiejanee/video/7636758966596406551?q=foreigner%20tries%20ube
+https://www.tiktok.com/@itsbrovaski/video/7647215796443155745?q=foreigner%20tries%20ube
+https://www.tiktok.com/@itscarterandalex/video/7417212304489467167?q=foreigner%20tries%20ube
+https://www.tiktok.com/@eatsbynat/video/7508569521192471838?q=foreigner%20tries%20ube
+https://www.tiktok.com/@travelfuller/video/7492158527104912682?q=foreigner%20tries%20ube
+https://www.tiktok.com/@sugartokiee/video/7619185307300285716?q=foreigner%20tries%20ube
+https://www.tiktok.com/@joyceinloveandlife/video/7583459701552205076?q=foreigner%20tries%20ube
+https://www.tiktok.com/@kristypata/video/7630047273770061077?q=foreigner%20tries%20ube
+https://www.tiktok.com/@hopeindubai/video/7640611415337815303?q=foreigner%20tries%20ube
+https://www.tiktok.com/@iamliyahbiyah/video/7509991914230385951?q=foreigner%20tries%20ube
+https://www.tiktok.com/@kwamevlogs/video/7607630318534659349?q=foreigner%20tries%20ube
+https://www.tiktok.com/@jaredsmall333/video/7473113232102739206?q=foreigner%20tries%20ube
+https://www.tiktok.com/@realandrecasper/video/7376361109021871406?q=foreigner%20tries%20ube
+https://www.tiktok.com/@alta.co6/video/7596668243671059742?q=foreigner%20tries%20ube
+https://www.tiktok.com/@john.2_rosaros/video/7626029757024537878?q=foreigner%20tries%20ube
+https://www.tiktok.com/@charmiejanee/video/7505785307493764354?q=foreigner%20tries%20ube
+
+# purple yam
+https://www.tiktok.com/@thereseabean/video/7617656811470048532?q=purple%20yam
+https://www.tiktok.com/@shaunsonexplains/video/7641263536391458061?q=purple%20yam
+https://www.tiktok.com/@shaunsonexplains/video/7645758198380580110?q=purple%20yam
+https://www.tiktok.com/@appletree004/video/7636050233251728671?q=purple%20yam
+https://www.tiktok.com/@fiberchina/video/7580174292575391006?q=purple%20yam
+https://www.tiktok.com/@melissaaltcakes/video/7613917133264784653?q=purple%20yam
+https://www.tiktok.com/@iloveyochi/video/7561324512495684876?q=purple%20yam
+https://www.tiktok.com/@hairbyjazie/video/7615453536687639821?q=purple%20yam
+https://www.tiktok.com/@icechococake_/video/7638230639971470599?q=purple%20yam
+
+# ube pronunciation
+https://www.tiktok.com/@dom.skii/video/7652206786878901525?q=ube%20pronunciation
+https://www.tiktok.com/@tautaifanok/video/7616135959188393246?q=ube%20pronunciation
+https://www.tiktok.com/@jackiesanjose/video/7615205260272880927?q=ube%20pronunciation
+https://www.tiktok.com/@sweetlikehunnay/video/7616954054085774623?q=ube%20pronunciation
