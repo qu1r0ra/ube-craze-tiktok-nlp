@@ -27,7 +27,9 @@ class SentimentAnalyzer:
     def pipeline(self):
         """Lazy-loaded transformers sentiment pipeline."""
         if self._pipeline is None:
-            print(f"Loading sentiment model: {self.model_name} on device: {self.device}...")
+            print(
+                f"Loading sentiment model: {self.model_name} on device: {self.device}..."
+            )
             # Disable pipeline warning messages
             self._pipeline = pipeline(
                 "sentiment-analysis",
@@ -43,10 +45,12 @@ class SentimentAnalyzer:
             return {"label": "neutral", "score": 0.0}
 
         try:
-            # The pipeline returns a list containing a dict,
-            # e.g., [{'label': 'LABEL_1', 'score': 0.85}]
             res = self.pipeline(text)[0]
-            mapped_label = LABEL_MAP.get(res["label"], "neutral")
+            label = res["label"]
+            mapped_label = LABEL_MAP.get(
+                label,
+                label if label in ["positive", "neutral", "negative"] else "neutral",
+            )
             return {"label": mapped_label, "score": float(res["score"])}
         except Exception as e:
             print(f"Error predicting sentiment: {e}")
@@ -70,7 +74,15 @@ class SentimentAnalyzer:
                 max_length=512,
             )
             for res in pipe_results:
-                mapped_label = LABEL_MAP.get(res["label"], "neutral")
+                label = res["label"]
+                mapped_label = LABEL_MAP.get(
+                    label,
+                    (
+                        label
+                        if label in ["positive", "neutral", "negative"]
+                        else "neutral"
+                    ),
+                )
                 results.append({"label": mapped_label, "score": float(res["score"])})
         except Exception as e:
             print(f"Error during batch sentiment prediction: {e}")
