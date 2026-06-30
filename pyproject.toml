@@ -19,6 +19,7 @@ dependencies = [
     "stopwordsiso>=0.7.0",
     "torch==2.12.1+cu132",
     "transformers>=5.12.1",
+    "wordcloud>=1.9.6",
 ]
 
 [dependency-groups]
