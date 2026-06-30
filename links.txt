@@ -1,0 +1,15 @@
+# Paste your 30 TikTok video URLs here (one URL per line).
+# Lines starting with '#' are ignored by the scraper.
+# Example:
+# https://www.tiktok.com/@cnn/video/7637043281548856590
+https://www.tiktok.com/@bnc.ph/video/7650435756334255381
+
+# Study Search Keywords:
+# 1. ube
+# 2. ube craze
+# 3. filipino ube
+# 4. trader joes ube
+# 5. foreigner tries ube
+# 6. purple yam
+# 7. ube pronunciation
+# 8. ube taste test
