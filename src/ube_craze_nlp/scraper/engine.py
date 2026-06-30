@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import logging
 import random
 import re
 from pathlib import Path
@@ -17,6 +18,8 @@ from ube_craze_nlp.scraper.parser import (
     parse_video_details,
 )
 from ube_craze_nlp.utils.paths import LINKS_FILE, RAW_DATA_DIR, ensure_dirs
+
+logger = logging.getLogger(__name__)
 
 
 class TikTokScraperEngine:
@@ -58,14 +61,16 @@ class TikTokScraperEngine:
                             f.write(chunk)
                 return True
             else:
-                print(f"⚠️ Video download failed: HTTP Status {response.status_code}")
+                logger.warning(
+                    f"Video download failed: HTTP Status {response.status_code}"
+                )
         except Exception as e:
-            print(f"⚠️ Error downloading video: {e}")
+            logger.warning(f"Warning: Error downloading video: {e}")
         return False
 
     async def scrape_video(self, url: str) -> dict[str, Any]:
         """Scrape a single TikTok video metadata, comments, and replies."""
-        print(f"\n🚀 Initiating scrape for URL: {url}")
+        logger.info(f"\nInitiating scrape for URL: {url}")
 
         video_id = ""
         video_id_match = re.search(r"/video/(\d+)", url)
@@ -73,7 +78,9 @@ class TikTokScraperEngine:
             video_id = video_id_match.group(1)
 
         if not video_id:
-            print("❌ Invalid TikTok Video URL (could not extract Video ID).")
+            logger.error(
+                "Error: Invalid TikTok Video URL (could not extract Video ID)."
+            )
             return {"status": "failed", "error": "Invalid URL"}
 
         # Store intercepted comment API payloads
@@ -127,7 +134,7 @@ class TikTokScraperEngine:
             try:
                 await page.goto(url, wait_until="domcontentloaded", timeout=45000)
             except Exception as e:
-                print(f"Page navigation warning (timeout/incomplete): {e}")
+                logger.warning(f"Page navigation warning (timeout/incomplete): {e}")
 
             await self.random_sleep(3, 5)
 
@@ -150,14 +157,14 @@ class TikTokScraperEngine:
                     """
                 )
                 if comments_tab:
-                    print("Clicked Comments tab button to load comments section.")
+                    logger.info("Clicked Comments tab button to load comments section.")
                     await self.random_sleep(2.0, 3.5)
                 else:
-                    print(
+                    logger.info(
                         "Comments tab button not found (comments might be loaded directly)."
                     )
             except Exception as e:
-                print(f"Error clicking Comments tab: {e}")
+                logger.error(f"Error clicking Comments tab: {e}")
 
             # Parse video details from page rehydration script
             html_content = await page.content()
@@ -166,11 +173,11 @@ class TikTokScraperEngine:
 
             # Resolve author name
             author = video_meta.get("author") or "unknown"
-            print(f"🎥 Video Author: @{author}")
-            print(f"💬 Expected Comment Count: {video_meta.get('comment_count', 0)}")
+            logger.info(f"Video Author: @{author}")
+            logger.info(f"Expected Comment Count: {video_meta.get('comment_count', 0)}")
 
             # Scrape top-level comments by scrolling
-            print("⏳ Loading comments...")
+            logger.info("Loading comments...")
             stuck_count = 0
             last_comment_len = 0
             max_scroll_attempts = 80  # Safety net limit
@@ -194,7 +201,7 @@ class TikTokScraperEngine:
                 )
 
                 if current_top_level >= target_comments and target_comments > 0:
-                    print("   Target count of top-level comments reached.")
+                    logger.info("   Target count of top-level comments reached.")
                     break
 
                 # Scroll comment container or body
@@ -243,7 +250,7 @@ class TikTokScraperEngine:
                 if len(unique_cids) == last_comment_len:
                     stuck_count += 1
                     if stuck_count >= 15:
-                        print(
+                        logger.info(
                             "   Scraped all available comments (reached end of feed)."
                         )
                         break
@@ -253,7 +260,7 @@ class TikTokScraperEngine:
                 last_comment_len = len(unique_cids)
 
             # Expand reply threads
-            print("🔄 Expanding replies (View replies)...")
+            logger.info("Expanding replies (View replies)...")
             # We run this in a loop to click the reply buttons multiple times as they appear
             max_reply_passes = 10
             for pass_idx in range(max_reply_passes):
@@ -275,7 +282,7 @@ class TikTokScraperEngine:
                     }
                 """
                 )
-                print(
+                logger.info(
                     f"   Pass {pass_idx + 1}: Clicked {clicked} reply expand buttons."
                 )
                 if clicked == 0:
@@ -304,19 +311,19 @@ class TikTokScraperEngine:
             play_addr = video_meta.get("play_addr")
             video_downloaded = False
             if play_addr:
-                print("⬇️ Downloading video MP4...")
+                logger.info("Downloading video MP4...")
                 mp4_path = video_folder / f"{video_id}.mp4"
                 video_downloaded = await self.download_video(
                     play_addr, mp4_path, cookie_dict, user_agent
                 )
                 if video_downloaded:
-                    print(f"   ✅ Saved MP4: {mp4_path}")
+                    logger.info(f"   Saved MP4: {mp4_path}")
 
             # Shutdown browser
             await context.close()
             await browser.close()
 
-        print(f"🎉 Completed scraping for video {video_id}!")
+        logger.info(f"Completed scraping for video {video_id}!")
         return {
             "status": "success",
             "video_id": video_id,
@@ -331,7 +338,7 @@ def read_video_urls() -> list[str]:
     """Read target TikTok URLs from links.txt file."""
     urls = []
     if not LINKS_FILE.exists():
-        print(f"⚠️ {LINKS_FILE} not found. Creating empty file...")
+        logger.warning(f"Warning: {LINKS_FILE} not found. Creating empty file...")
         with open(LINKS_FILE, "w") as f:
             f.write("# Paste TikTok URLs here\n")
         return []
@@ -348,21 +355,21 @@ async def main():
     """Main execution block to scrape all links."""
     urls = read_video_urls()
     if not urls:
-        print("❌ No URLs found in links.txt. Add URLs and try again.")
+        logger.error("Error: No URLs found in links.txt. Add URLs and try again.")
         return
 
-    print(f"📋 Loaded {len(urls)} URLs from links.txt.")
+    logger.info(f"Loaded {len(urls)} URLs from links.txt.")
     engine = TikTokScraperEngine(headless=True)
 
     for i, url in enumerate(urls, 1):
-        print(f"\n--- Progress: [{i}/{len(urls)}] ---")
+        logger.info(f"\n--- Progress: [{i}/{len(urls)}] ---")
         try:
             result = await engine.scrape_video(url)
-            print(f"Result: {result}")
+            logger.info(f"Result: {result}")
             # Dynamic sleep between videos to prevent IP banning
             await engine.random_sleep(5.0, 10.0)
         except Exception as e:
-            print(f"❌ Error scraping {url}: {e}")
+            logger.error(f"Error scraping {url}: {e}")
 
 
 if __name__ == "__main__":

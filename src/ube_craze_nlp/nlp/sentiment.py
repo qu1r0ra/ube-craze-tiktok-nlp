@@ -1,9 +1,12 @@
 """Sentiment Analysis module using CardiffNLP XLM-RoBERTa model locally."""
 
+import logging
 from typing import Any
 
 import torch
 from transformers import pipeline
+
+logger = logging.getLogger(__name__)
 
 # Constants
 MODEL_NAME = "cardiffnlp/twitter-xlm-roberta-base-sentiment"
@@ -27,9 +30,7 @@ class SentimentAnalyzer:
     def pipeline(self):
         """Lazy-loaded transformers sentiment pipeline."""
         if self._pipeline is None:
-            print(
-                f"Loading sentiment model: {self.model_name} on device: {self.device}..."
-            )
+            logger.info(f"Loading sentiment model: {self.model_name} on device: {self.device}...")
             # Disable pipeline warning messages
             self._pipeline = pipeline(
                 "sentiment-analysis",
@@ -53,7 +54,7 @@ class SentimentAnalyzer:
             )
             return {"label": mapped_label, "score": float(res["score"])}
         except Exception as e:
-            print(f"Error predicting sentiment: {e}")
+            logger.error(f"Error predicting sentiment: {e}")
             return {"label": "neutral", "score": 0.0}
 
     def predict_batch(self, texts: list[str]) -> list[dict[str, Any]]:
@@ -77,15 +78,11 @@ class SentimentAnalyzer:
                 label = res["label"]
                 mapped_label = LABEL_MAP.get(
                     label,
-                    (
-                        label
-                        if label in ["positive", "neutral", "negative"]
-                        else "neutral"
-                    ),
+                    (label if label in ["positive", "neutral", "negative"] else "neutral"),
                 )
                 results.append({"label": mapped_label, "score": float(res["score"])})
         except Exception as e:
-            print(f"Error during batch sentiment prediction: {e}")
+            logger.error(f"Error during batch sentiment prediction: {e}")
             # Fallback to single predictions
             results = [self.predict(t) for t in texts]
 

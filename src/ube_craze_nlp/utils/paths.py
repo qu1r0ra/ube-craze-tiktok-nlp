@@ -14,6 +14,9 @@ FINAL_DATA_DIR = DATA_DIR / "final"
 # Reference and Outputs Directories
 REFERENCES_DIR = ROOT_DIR / "references"
 OUTPUTS_DIR = ROOT_DIR / "outputs"
+OUTPUTS_PLOTS_DIR = OUTPUTS_DIR / "plots"
+OUTPUTS_CLUSTERS_DIR = OUTPUTS_DIR / "clusters"
+OUTPUTS_DOCS_DIR = OUTPUTS_DIR / "docs"
 NOTEBOOKS_DIR = ROOT_DIR / "notebooks"
 
 # Config Files
@@ -27,6 +30,9 @@ def ensure_dirs():
     FINAL_DATA_DIR.mkdir(parents=True, exist_ok=True)
     REFERENCES_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUTS_PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUTS_CLUSTERS_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUTS_DOCS_DIR.mkdir(parents=True, exist_ok=True)
     NOTEBOOKS_DIR.mkdir(parents=True, exist_ok=True)
 
 

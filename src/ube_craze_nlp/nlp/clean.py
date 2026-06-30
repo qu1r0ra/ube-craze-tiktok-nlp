@@ -1,5 +1,6 @@
 """Language filtering, text normalization, and stopword removal module."""
 
+import logging
 import re
 
 import nltk
@@ -13,6 +14,8 @@ for resource in ["tokenizers/punkt", "tokenizers/punkt_tab"]:
     except LookupError:
         name = resource.split("/")[-1]
         nltk.download(name, quiet=True)
+
+logger = logging.getLogger(__name__)
 
 # Build a language detector for English, Tagalog, and neighboring/foreign languages
 # This helps distinguish and filter out non-target languages while keeping Taglish
@@ -38,6 +41,50 @@ ENGLISH_STOPWORDS = set(stopwords("en"))
 TAGALOG_STOPWORDS = set(stopwords("tl"))
 ALL_STOPWORDS = ENGLISH_STOPWORDS.union(TAGALOG_STOPWORDS)
 
+# Custom stop words specifically for the K-Means/topic clustering feature space
+# (visual markers, search query terms, and colloquial Tagalog pronouns/particles)
+CLUSTERING_STOPWORDS = ALL_STOPWORDS.union(
+    {
+        "sticker",
+        "ube",
+        "philippines",
+        "filipino",
+        "filipinos",
+        "ph",
+        "tiktok",
+        "video",
+        "daw",
+        "muna",
+        "sya",
+        "nya",
+        "nung",
+        "yung",
+        "ang",
+        "ng",
+        "mga",
+        "sa",
+        "na",
+        "lang",
+        "pa",
+        "ba",
+        "po",
+        "ko",
+        "mo",
+        "at",
+        "rin",
+        "din",
+        "to",
+        "ong",
+        "si",
+        "ni",
+        "kuya",
+        "ate",
+        "starbucks",
+        "starbuck",
+        "drink",
+    }
+)
+
 
 def detect_language(text: str) -> str | None:
     """Detect the language of the text. Returns 'en', 'tl', or 'other' (or None)."""
@@ -60,7 +107,7 @@ def detect_language(text: str) -> str | None:
         elif detected is not None:
             return "other"
     except Exception as e:
-        print(f"Error detecting language: {e}")
+        logger.error(f"Error detecting language: {e}")
     return None
 
 

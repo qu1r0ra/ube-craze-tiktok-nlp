@@ -1,9 +1,12 @@
 """Metadata and JSON response parser for scraped TikTok data."""
 
 import json
+import logging
 import re
 from datetime import UTC, datetime
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 
 def extract_rehydration_data(html_content: str) -> dict[str, Any]:
@@ -17,7 +20,7 @@ def extract_rehydration_data(html_content: str) -> dict[str, Any]:
         if match:
             return json.loads(match.group(1))
     except Exception as e:
-        print(f"Error parsing rehydration script: {e}")
+        logger.error(f"Error parsing rehydration script: {e}")
     return {}
 
 
@@ -74,7 +77,7 @@ def parse_video_details(rehydration_data: dict[str, Any], url: str) -> dict[str,
             meta["download_count"] = stats.get("downloadCount", 0)
 
     except Exception as e:
-        print(f"Error parsing rehydration video details: {e}")
+        logger.error(f"Error parsing rehydration video details: {e}")
 
     return meta
 
@@ -165,6 +168,6 @@ def parse_comments_payload(payload: dict[str, Any]) -> list[dict[str, Any]]:
                 )
 
         except Exception as e:
-            print(f"Error parsing individual comment item: {e}")
+            logger.error(f"Error parsing individual comment item: {e}")
 
     return parsed_comments
