@@ -77,7 +77,7 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 
 - Headless browser configuration tested and verified; executed scraper successfully in the background to harvest all 67 video targets, yielding 9,504 raw comments.
 - Fixed CardiffNLP label mapping bug in `sentiment.py` to prevent incorrect neutral defaulting.
-- Created `run_pipeline.py` runner to execute the preprocessing, sentiment scoring, and plotting notebooks automatically and non-blockingly using Matplotlib's `'Agg'` backend.
+- Created `scripts/run_pipeline.py` runner to execute the preprocessing, sentiment scoring, and plotting notebooks automatically and non-blockingly using Matplotlib's `'Agg'` backend.
 - Separated neutral and negative comment subsets in the word/N-gram frequency analyses to avoid drowning active friction/resistance under neutral botanical/product descriptions.
 - Generated and saved `cleaned_comments.csv` (6,137 unique comments) and `sentiment_scored_comments.csv`, and reorganized all 20+ visualization/analysis outputs into `outputs/` subfolders (plots, clusters, and docs). This includes general frequency/sentiment plots (`outputs/plots/`), elbow curve, cluster size distribution, stacked sentiment breakdown, stacked language distribution, individual word clouds, and grid layouts (`outputs/clusters/`), and qualitative documents (`outputs/docs/cluster_insights.md` and `outputs/docs/cluster_samples.md`).
 
