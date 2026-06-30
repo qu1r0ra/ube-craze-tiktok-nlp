@@ -59,7 +59,10 @@ A high-level overview of the repository organization:
 │   ├── 02_preprocessing.ipynb  # Language filtering, emoji removal, and token cleaning
 │   ├── 03_sentiment_analysis.ipynb # XLM-RoBERTa transformer inference
 │   └── 04_visualization.ipynb  # N-grams, K-Means clustering, heatmaps, and plotting
-├── outputs/                    # Ignored folder for generated figures, plots, and charts
+├── outputs/                    # Exported figures, plots, and qualitative analysis documents
+│   ├── clusters/               # Topic cluster statistics, size/sentiment distributions, and word clouds
+│   ├── docs/                   # Qualitative analysis documents (insights and comment samples)
+│   └── plots/                  # General sentiment distributions and bigram/trigram frequencies
 ├── src/                        # Core Python package codebase
 │   └── ube_craze_nlp/
 │       ├── nlp/                # Text cleaning (clean.py) and sentiment inference (sentiment.py)
@@ -133,7 +136,7 @@ Open `notebooks/04_visualization.ipynb` to run:
 - **N-Gram Frequency Distributions**: Extracting the top bigrams and trigrams to identify the most common phrases.
 - **K-Means Clustering**: Clustering comments using TF-IDF representation and analyzing cluster keywords.
 - **Sentiment Heatmap**: Creating transition matrices plotting parent comments vs. reply sentiments to analyze how replies align with or contest parent threads.
-- **Result Visuals**: Automatically exporting plots to the `outputs/` folder.
+- **Result Visuals**: Automatically exporting plots and documents to the reorganized `outputs/` subdirectories.
 
 ## 5. NLP Methodology & Model
 
