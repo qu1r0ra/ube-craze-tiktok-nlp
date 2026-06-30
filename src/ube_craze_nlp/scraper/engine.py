@@ -131,7 +131,7 @@ class TikTokScraperEngine:
 
             await self.random_sleep(3, 5)
 
-            # Click the Comments tab button if present (TikTok desktop view defaults to 'You may like')
+            # Click Comments tab if present (TikTok desktop view defaults to 'You may like')
             try:
                 comments_tab = await page.evaluate(
                     """
@@ -200,11 +200,12 @@ class TikTokScraperEngine:
                 # Scroll comment container or body
                 await page.evaluate(
                     """
-                    const container = document.querySelector('[data-e2e="comment-list"]') ||
-                                      document.querySelector('div[class*="CommentListContainer"]') ||
-                                      document.querySelector('div[class*="DivCommentListContainer"]') ||
-                                      document.querySelector('div[class*="CommentMain"]') ||
-                                      document.querySelector('div[class*="DivCommentMain"]');
+                    const container =
+                        document.querySelector('[data-e2e="comment-list"]') ||
+                        document.querySelector('div[class*="CommentListContainer"]') ||
+                        document.querySelector('div[class*="DivCommentListContainer"]') ||
+                        document.querySelector('div[class*="CommentMain"]') ||
+                        document.querySelector('div[class*="DivCommentMain"]');
                     if (container) {
                         container.scrollTop = container.scrollHeight;
                     } else {

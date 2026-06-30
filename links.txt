@@ -1,4 +1,4 @@
-# Paste your 30 TikTok video URLs here (one URL per line).
+# Paste your TikTok video URLs here (one URL per line).
 # Lines starting with '#' are ignored by the scraper.
 # Example:
 # https://www.tiktok.com/@cnn/video/7637043281548856590
