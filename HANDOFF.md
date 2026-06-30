@@ -17,8 +17,10 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 2. Read the approved proposal in [references/proposal.md](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/references/proposal.md).
 3. Read this file end-to-end, then review the implementation queue in [Section 5](#5-implementation-queue).
 4. Run `uv sync` to ensure your virtual environment is synchronized.
-5. Create a `links.txt` file at the root containing TikTok video URLs (one per line) to scrape.
-6. Before ending a session, update this file and update `AGENTS.md` to record status.
+5. Populate `links.txt` at the root with 30 target TikTok video URLs (done by developer).
+6. Run `uv run python -m ube_craze_nlp.scraper.engine` to scrape metadata and comment payloads.
+7. Run preprocessing, sentiment analysis, and visualization notebooks in the `notebooks/` directory.
+8. Before ending a session, update this file and update `AGENTS.md` to record status.
 
 ---
 
@@ -38,14 +40,14 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 
 ## 3. Locked Architectural Decisions
 
-| Topic               | Decision                             | Details                                                                                          |
-| :------------------ | :----------------------------------- | :----------------------------------------------------------------------------------------------- |
-| **Data Source**     | TikTok only                          | Constrained to TikTok comments and metadata based on Scope and Limitations (6-week timeline).    |
-| **Scraper Style**   | Playwright + Network Interception    | Intercepts JSON responses from TikTok's API endpoints to bypass brittle DOM structures.          |
-| **Scraper Inputs**  | `links.txt` file                     | List of exactly 30 high-engagement video URLs to ensure human relevance and bypass search walls. |
-| **NLP Language**    | English, Tagalog, and Taglish        | Filtered using `lingua-language-detector` to discard other languages.                            |
-| **Sentiment Model** | `twitter-xlm-roberta-base-sentiment` | Multilingual transformer executed locally offline for robust mixed-language (Taglish) sentiment. |
-| **Packaging**       | `uv` with Hatchling backend          | Replicates professional standard; package root resolved dynamically.                             |
+| Topic               | Decision                             | Details                                                                                                                                                                         |
+| :------------------ | :----------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Data Source**     | TikTok only                          | Constrained to TikTok comments and metadata based on Scope and Limitations (6-week timeline).                                                                                   |
+| **Scraper Style**   | Playwright + Network Interception    | Intercepts JSON responses from TikTok's API endpoints. Automatically triggers the Comments tab and scrolls using updated `CommentMain` selectors to bypass 'You may like' tabs. |
+| **Scraper Inputs**  | `links.txt` file                     | List of exactly 30 high-engagement video URLs to ensure human relevance and bypass search walls.                                                                                |
+| **NLP Language**    | English, Tagalog, and Taglish        | Filtered using `lingua-language-detector` to discard other languages.                                                                                                           |
+| **Sentiment Model** | `twitter-xlm-roberta-base-sentiment` | Multilingual transformer executed locally offline for robust mixed-language (Taglish) sentiment.                                                                                |
+| **Packaging**       | `uv` with Hatchling backend          | Replicates professional standard; package root resolved dynamically. Includes `requests` package.                                                                               |
 
 ---
 
@@ -60,7 +62,7 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 
 ### Phase 2: TikTok Scraper [Complete]
 
-- Playwright network interception engine (`engine.py`) and response parser (`parser.py`) fully implemented and unit-tested.
+- Playwright network interception engine (`engine.py`) and response parser (`parser.py`) fully implemented, upgraded to handle new desktop tab layouts and updated class selectors, and successfully unit-tested.
 
 ### Phase 3: NLP & Preprocessing [Complete]
 
