@@ -1,0 +1,33 @@
+---
+description: Overview of the Ube Craze TikTok NLP project and coding conventions
+globs: "**/*.py,pyproject.toml,notebooks/*.ipynb"
+alwaysApply: true
+---
+
+# Project Overview & Coding Conventions
+
+This project explores **digital gastronationalism** on TikTok regarding the global trend of **Ube** (Filipino purple yam). It scrapes metadata and comments from TikTok videos and performs sentiment analysis on English, Tagalog, and Taglish text.
+
+## Core Rules
+
+1. **Coding Style**:
+   - Python code must follow PEP 8 and pass `ruff` formatting/linting.
+   - Use type hints (`from typing import ...`) for all function definitions.
+   - All modules must have descriptive docstrings.
+
+2. **Scraper Architecture**:
+   - The scraper in `scraper/engine.py` must use Playwright and intercept network requests.
+   - Specifically target requests containing `/api/comment/list/` to capture clean JSON comments rather than parsing unstable HTML/DOM.
+   - Implement rate-limiting, random sleep delays (1.5s - 4s), and automatic timeouts so as to avoid anti-bot blocking and script hangs.
+
+3. **Data Preprocessing & NLP**:
+   - Language filtering must use `lingua-language-detector` to isolate English and Tagalog (Taglish). Non-target languages (e.g., Vietnamese, Spanish, Indonesian) must be discarded.
+   - Use `stopwordsiso` for the Tagalog (`tl`) stopword list and NLTK for English stopwords.
+   - The sentiment model must be run locally using the `transformers` pipeline with the `cardiffnlp/twitter-xlm-roberta-base-sentiment` model.
+
+4. **Jupyter Notebooks**:
+   - Notebooks in `notebooks/` must be numbered in sequence: `01_scraping.ipynb`, `02_preprocessing.ipynb`, `03_sentiment_analysis.ipynb`, `04_visualization.ipynb`.
+   - Notebooks must be clean, readable, and contain markdown headers explaining each step.
+
+5. **Paths**:
+   - Never use hardcoded absolute paths in scripts. Use `src/ube_craze_nlp/utils/paths.py` or `pathlib.Path` relative to the project root.

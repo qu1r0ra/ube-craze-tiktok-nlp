@@ -1,0 +1,32 @@
+---
+description: Approved tech stack for the Ube Craze TikTok NLP project
+globs: "**/*.py,pyproject.toml,notebooks/*.ipynb"
+alwaysApply: true
+---
+
+# Tech Stack Reference
+
+This document catalogs the approved Python packages and development tools for the **"More Than Purple: Ube The Filipino Cultural Icon"** project.
+
+| Category               | Package                    | Purpose                                   | Why it was chosen                                                                                                                                                                               |
+| :--------------------- | :------------------------- | :---------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Scraping**           | `playwright`               | Core browser automation engine.           | Allows headless/headful browsing, scrolling, and network interception.                                                                                                                          |
+|                        | `playwright-stealth`       | Browser spoofing & stealth.               | Injects configurations to hide browser automation flags, bypassing simple anti-bot triggers.                                                                                                    |
+| **Language Filtering** | `lingua-language-detector` | High-precision language identifier.       | The most accurate tool for short texts (social media comments). We can configure it to detect English, Tagalog, and neighboring languages, allowing us to filter out foreign languages cleanly. |
+|                        | `stopwordsiso`             | Standardized multilingual stopword lists. | Sourced from the ISO project. Provides robust lists for both English and Tagalog (`tl`) for data cleaning.                                                                                      |
+|                        | `nltk`                     | Natural Language Toolkit.                 | Standard helper library for word tokenization, punctuation removal, and basic NLP utilities.                                                                                                    |
+| **Sentiment Analysis** | `transformers`             | Hugging Face model loader.                | Standard library to load and execute the local `cardiffnlp/twitter-xlm-roberta-base-sentiment` model.                                                                                           |
+|                        | `torch`                    | PyTorch backend.                          | Deep learning engine required by `transformers` to execute models offline on your CPU or GPU.                                                                                                   |
+| **Data & Export**      | `pandas`                   | Tabular data manipulation.                | Core framework for structuring comments, cleaning columns, and exporting datasets.                                                                                                              |
+| **Visualization**      | `matplotlib` & `seaborn`   | Plotting & charts.                        | Used in Jupyter Notebooks to render sentiment distributions, frequency charts, and word correlation maps.                                                                                       |
+| **Dev Tools (Group)**  | `ipykernel`                | Jupyter Notebook runner.                  | Connects Jupyter Notebook interface to this specific `uv` virtual environment.                                                                                                                  |
+|                        | `pytest`                   | Test suite runner.                        | Runs unit tests for your data processors and scrapers.                                                                                                                                          |
+|                        | `ruff`                     | Linter and Formatter.                     | An extremely fast, modern tool that replaces both `black` and `flake8` to keep codebase style consistent.                                                                                       |
+
+---
+
+## Guidelines for Adding Packages
+
+- Always use `uv add <package>` to add a package.
+- If a package is only used for local development, formatting, or notebook execution, use `uv add --dev <package>`.
+- Any changes to core dependencies must be logged in this rule file.
