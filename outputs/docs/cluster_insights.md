@@ -38,24 +38,25 @@ This document records the qualitative analysis, themes, and sociopolitical/gastr
 
 ---
 
-## Methodological Selection of K=7 (Validation Sweep)
+## Interpretive Selection of K via Thematic Coherence
 
-To determine the optimal cluster size, we performed a qualitative validation sweep across adjacent values ($K \in [5, 8]$) to evaluate thematic coherence and overlap:
+Rather than relying strictly on automated quantitative metrics (such as silhouette scores or elbow plots) which often optimize for mathematical spacing at the expense of conceptual meaning, we selected the cluster count ($K = 7$) through an interpretive evaluation of topic distinctiveness and alignment with the study's theoretical categories.
 
-### 1. Diagnostic Summary of Adjacent Runs
+To support this choice, we qualitatively mapped the semantic outputs of adjacent cluster counts ($K \in [5, 8]$):
+
+### 1. Qualitative Evaluation of Adjacent Runs
 
 - **K = 5 (Under-Clustering)**:
-  - **Theme Merging**: Matcha-fication (gentrification) and Taro substitution (flavor boundaries) were collapsed into a single catch-all cluster (`matcha, taro, halaya, omg, flavor, real`).
-  - **Implication**: We lose the analytical granularity to distinguish between corporate macroeconomic anxieties (Starbucks gentrification) and culinary/botanical integrity (resisting taro substitution).
+  - **Theme Merging**: Matcha-fication (corporate gentrification) and Taro substitution (flavor boundary policing) were collapsed into a single massive catch-all cluster (`matcha, taro, halaya, omg, flavor, real`).
+  - **Interpretive Loss**: This configuration obscures the critical distinction between macroeconomic anxieties (e.g., Starbucks marketing ube) and culinary integrity concerns (e.g., cafes using cheap taro powder).
 - **K = 6 (Under-Clustering)**:
-  - **Theme Merging**: Still failed to isolate matcha and taro. The domestic agricultural policy critique (`government`) was compressed alongside general culinary comments into Cluster 0.
-- **K = 7 (Optimal Inflection Point)**:
-  - **Granularity**: Cleanly isolates all key theoretical variables: orthographic pronunciation correction (Cluster 0), emotive backlash/memetic defense (Cluster 3), corporate matcha-fication (Cluster 4), taro flavor boundary enforcement (Cluster 5), and botanical accuracy (Cluster 6).
-  - **Implication**: Maximizes interpretability and aligns perfectly with critical media studies frameworks.
+  - **Theme Merging**: The model isolated product-related descriptors (`magnolia, cheese, ice cream`) but still failed to separate corporate gentrification (matcha) and flavor boundaries (taro) from general comments, and grouped domestic agricultural critiques (`government`) inside the primary cluster.
+- **K = 7 (Optimal Thematic Alignment)**:
+  - **Interpretive Granularity**: This count successfully separates and isolates all key analytical categories relevant to our critical media framework: orthographic pronunciation correction (Cluster 0), emotive meme-driven backlash (Cluster 3), corporate matcha-fication (Cluster 4), taro flavor boundary enforcement (Cluster 5), and botanical classification (Cluster 6).
 - **K = 8 (Over-Clustering & Redundancy)**:
-  - **Topic Redundancy**: Split botanical/visual classifications into two redundant clusters: Cluster 3 (`sweet, potato, purple, yam...`) and Cluster 5 (`purple, yam, color, yum...`).
-  - **Topic Collapse**: Re-collapsed pronunciation correction and emotive memes back into a single Cluster 1 (`oob, pronounced, called...`), losing the nuance of different forms of cultural gatekeeping.
+  - **Topic Redundancy**: The model split botanical classifications into two redundant groups: Cluster 3 (`sweet, potato, purple, yam...`) and Cluster 5 (`purple, yam, color, yum...`), yielding no new theoretical insights.
+  - **Topic Collapse**: Concurrently, it re-collapsed polite pronunciation correction and emotive memes back into a single cluster (`oob, pronounced, called...`), erasing the subtle distinction between different forms of digital gatekeeping.
 
-### 2. Validation Verdict
+### 2. Selection Rationale
 
-Selecting **$K=7$** provides the most theoretically coherent and semantically distinct division of comments, providing a strong empirical base for mixed-methods and qualitative gastronationalist analysis.
+Selecting **$K=7$** represents an interpretive choice grounded in qualitative coherence. It provides the most theoretically descriptive division of comment topics, establishing a solid foundation for our mixed-methods analysis of digital gastronationalism.

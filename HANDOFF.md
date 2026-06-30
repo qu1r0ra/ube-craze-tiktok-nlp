@@ -2,12 +2,12 @@
 
 Living document for agent-to-agent and session-to-session continuity for the GEWORLD (The Contemporary World) Ube Craze TikTok NLP project.
 
-| Field                  | Value                                                                                               |
-| ---------------------- | --------------------------------------------------------------------------------------------------- |
-| **Last updated**       | 2026-06-30                                                                                          |
-| **Last session focus** | Transferred run_pipeline.py to scripts/ and updated README.md with detailed results/visualizations. |
-| **Active repo**        | `ube-craze-tiktok-nlp`                                                                              |
-| **Blockers**           | None (pipeline runs completed successfully)                                                         |
+| Field                  | Value                                                                                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Last updated**       | 2026-06-30                                                                                                                                        |
+| **Last session focus** | Conducted publishability assessment, ran qualitative validation sweep for K-Means (K=7), and reframed cluster insights around thematic coherence. |
+| **Active repo**        | `ube-craze-tiktok-nlp`                                                                                                                            |
+| **Blockers**           | None                                                                                                                                              |
 
 ---
 
@@ -116,6 +116,6 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 
 ## 8. Next Steps (Future Analysis)
 
-1. **Qualitative Synthesis:** [Complete] Implemented pipeline refinements (LSA/TruncatedSVD + custom stopwords) to generate highly coherent clusters, resolving the sticker-dominated and tiny 8-comment artifacts. Reorganized `outputs/` into subdirectories and updated descriptions in [cluster_insights.md](outputs/docs/cluster_insights.md) and [cluster_samples.md](outputs/docs/cluster_samples.md).
-2. **Interaction Matrix Interpretation:** Analyze the [reply_sentiment_heatmap.png](outputs/plots/reply_sentiment_heatmap.png) to determine how the community responds to negative/exoticizing parents vs. positive ones (soft power dynamics).
-3. **Drafting Findings:** Synthesize the sentiment transitions and topic frequencies into the final GEWORLD gastronationalism research paper and documentary script.
+1. **Qualitative Synthesis & K Validation:** [Complete] Validated $K=7$ through a systematic qualitative comparison of adjacent cluster runs ($K \in [5, 8]$) to confirm optimal thematic alignment. Re-aligned all cluster documentation ([cluster_insights.md](outputs/docs/cluster_insights.md)) around a qualitative thematic coherence narrative, removing quantitative-coded diagnostic jargon.
+2. **Publishability Framing:** [Complete] Conducted a comprehensive journal/conference fitness assessment and mapped NLP findings directly to core GEWORLD sociological frameworks (Appadurai's scapes, cultural glocalization vs. dilution, and postcolonial agricultural economics).
+3. **Drafting Manuscript & Documentary Script:** Synthesize the qualitative insights, N-gram findings, and parent-reply interaction matrix ([reply_sentiment_heatmap.png](outputs/plots/reply_sentiment_heatmap.png)) into the final gastronationalism research paper and short documentary script.
