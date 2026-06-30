@@ -2,12 +2,12 @@
 
 Living document for agent-to-agent and session-to-session continuity for the GEWORLD (The Contemporary World) Ube Craze TikTok NLP project.
 
-| Field                  | Value                                                                                                                                                                        |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Last updated**       | 2026-06-30                                                                                                                                                                   |
-| **Last session focus** | Resolved scraper scrolling bug, added new analyses (bigrams, trigrams, K-Means clustering, and reply sentiment alignment heatmaps) and verified the full pipeline end-to-end |
-| **Active repo**        | `ube-craze-tiktok-nlp`                                                                                                                                                       |
-| **Blockers**           | None (code is verified and ready for bulk scraping)                                                                                                                          |
+| Field                  | Value                                                                                                                                  |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **Last updated**       | 2026-06-30                                                                                                                             |
+| **Last session focus** | Completed bulk scraping of all 67 TikTok target videos, resolved sentiment label mapping bug, and executed the full NLP data pipeline. |
+| **Active repo**        | `ube-craze-tiktok-nlp`                                                                                                                 |
+| **Blockers**           | None (bulk scraping and pipeline run completed successfully on 67 videos)                                                              |
 
 ---
 
@@ -86,7 +86,7 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 |  5  | Write pytest test suites for scraper & text processors                                      | Tests     | [x]    |
 |  6  | Create Jupyter Notebooks 01 through 04                                                      | Notebooks | [x]    |
 |  7  | Generate sentiment visualization plots and export                                           | Outputs   | [x]    |
-|  8  | Add 67 target video URLs to `links.txt` and execute pipeline                                | Execution | [ ]    |
+|  8  | Add 67 target video URLs to `links.txt` and execute pipeline                                | Execution | [x]    |
 |  9  | Implement bigram/trigram, unsupervised clustering, and reply sentiment interaction analysis | Analysis  | [x]    |
 
 ---
