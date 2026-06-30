@@ -9,7 +9,7 @@ from typing import Any
 
 import requests
 from playwright.async_api import async_playwright
-from playwright_stealth import stealth_async
+from playwright_stealth import Stealth
 
 from ube_craze_nlp.scraper.parser import (
     extract_rehydration_data,
@@ -101,7 +101,7 @@ class TikTokScraperEngine:
             )
 
             page = await context.new_page()
-            await stealth_async(page)
+            await Stealth().apply_stealth_async(page)
 
             # Network Interception handler
             async def handle_response(response):
@@ -127,9 +127,37 @@ class TikTokScraperEngine:
             try:
                 await page.goto(url, wait_until="domcontentloaded", timeout=45000)
             except Exception as e:
-                print(f"⚠️ Page navigation warning (timeout/incomplete): {e}")
+                print(f"Page navigation warning (timeout/incomplete): {e}")
 
             await self.random_sleep(3, 5)
+
+            # Click the Comments tab button if present (TikTok desktop view defaults to 'You may like')
+            try:
+                comments_tab = await page.evaluate(
+                    """
+                    () => {
+                        const span = Array.from(document.querySelectorAll('span'))
+                            .find(el => el.textContent.trim().toLowerCase() === 'comments');
+                        if (span) {
+                            const button = span.closest('button');
+                            if (button) {
+                                button.click();
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                    """
+                )
+                if comments_tab:
+                    print("Clicked Comments tab button to load comments section.")
+                    await self.random_sleep(2.0, 3.5)
+                else:
+                    print(
+                        "Comments tab button not found (comments might be loaded directly)."
+                    )
+            except Exception as e:
+                print(f"Error clicking Comments tab: {e}")
 
             # Parse video details from page rehydration script
             html_content = await page.content()
@@ -161,22 +189,22 @@ class TikTokScraperEngine:
                     ]
                 )
 
-                print(f"   Collected top-level comments: {current_top_level}/{target_comments}")
+                print(
+                    f"   Collected top-level comments: {current_top_level}/{target_comments}"
+                )
 
                 if current_top_level >= target_comments and target_comments > 0:
-                    print("   ✅ Target count of top-level comments reached.")
+                    print("   Target count of top-level comments reached.")
                     break
 
                 # Scroll comment container or body
                 await page.evaluate(
                     """
                     const container = document.querySelector('[data-e2e="comment-list"]') ||
-                                      document.querySelector(
-                                          'div[class*="CommentListContainer"]'
-                                      ) ||
-                                      document.querySelector(
-                                          'div[class*="DivCommentListContainer"]'
-                                      );
+                                      document.querySelector('div[class*="CommentListContainer"]') ||
+                                      document.querySelector('div[class*="DivCommentListContainer"]') ||
+                                      document.querySelector('div[class*="CommentMain"]') ||
+                                      document.querySelector('div[class*="DivCommentMain"]');
                     if (container) {
                         container.scrollTop = container.scrollHeight;
                     } else {
@@ -191,7 +219,9 @@ class TikTokScraperEngine:
                 if len(unique_cids) == last_comment_len:
                     stuck_count += 1
                     if stuck_count >= 15:
-                        print("   ✅ Scraped all available comments (reached end of feed).")
+                        print(
+                            "   Scraped all available comments (reached end of feed)."
+                        )
                         break
                 else:
                     stuck_count = 0
@@ -221,7 +251,9 @@ class TikTokScraperEngine:
                     }
                 """
                 )
-                print(f"   Pass {pass_idx + 1}: Clicked {clicked} reply expand buttons.")
+                print(
+                    f"   Pass {pass_idx + 1}: Clicked {clicked} reply expand buttons."
+                )
                 if clicked == 0:
                     break
                 await self.random_sleep(2.0, 3.5)
