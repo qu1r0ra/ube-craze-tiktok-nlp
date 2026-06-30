@@ -2,12 +2,12 @@
 
 Living document for agent-to-agent and session-to-session continuity for the GEWORLD (The Contemporary World) Ube Craze TikTok NLP project.
 
-| Field                  | Value                                                                                                                                  |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| **Last updated**       | 2026-06-30                                                                                                                             |
-| **Last session focus** | Completed bulk scraping of all 67 TikTok target videos, resolved sentiment label mapping bug, and executed the full NLP data pipeline. |
-| **Active repo**        | `ube-craze-tiktok-nlp`                                                                                                                 |
-| **Blockers**           | None (bulk scraping and pipeline run completed successfully on 67 videos)                                                              |
+| Field                  | Value                                                                                                                                                        |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Last updated**       | 2026-06-30                                                                                                                                                   |
+| **Last session focus** | Reorganized outputs/ into plots/, clusters/, and docs/, added new visualizations, resolved mathematical artifacts using LSA SVD, and tracked outputs in Git. |
+| **Active repo**        | `ube-craze-tiktok-nlp`                                                                                                                                       |
+| **Blockers**           | None (pipeline runs completed successfully)                                                                                                                  |
 
 ---
 
@@ -19,7 +19,7 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 4. Run `uv sync` to ensure your virtual environment is synchronized.
 5. Populate `links.txt` at the root with 67 target TikTok video URLs (done by developer).
 6. Run `uv run python -m ube_craze_nlp.scraper.engine` to scrape metadata and comment payloads.
-7. Run preprocessing, sentiment analysis, and visualization notebooks in the `notebooks/` directory.
+7. Run preprocessing, sentiment analysis, and visualization notebooks in the `notebooks/` directory. (On Windows, prefix command execution with `$env:PYTHONIOENCODING="utf-8";` to prevent encoding crashes on emojis).
 8. Before ending a session, update this file and update `AGENTS.md` to record status.
 
 ---
@@ -73,6 +73,14 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 
 - Notebooks `01` through `04` fully generated, documented, and updated with advanced NLP sections (Bigrams, Trigrams, K-Means clustering, and Sentiment transition heatmap). All visualizations verified.
 
+### Phase 5: Bulk Execution & Data Generation [Complete]
+
+- Headless browser configuration tested and verified; executed scraper successfully in the background to harvest all 67 video targets, yielding 9,504 raw comments.
+- Fixed CardiffNLP label mapping bug in `sentiment.py` to prevent incorrect neutral defaulting.
+- Created `run_pipeline.py` runner to execute the preprocessing, sentiment scoring, and plotting notebooks automatically and non-blockingly using Matplotlib's `'Agg'` backend.
+- Separated neutral and negative comment subsets in the word/N-gram frequency analyses to avoid drowning active friction/resistance under neutral botanical/product descriptions.
+- Generated and saved `cleaned_comments.csv` (6,137 unique comments) and `sentiment_scored_comments.csv`, and reorganized all 20+ visualization/analysis outputs into `outputs/` subfolders (plots, clusters, and docs). This includes general frequency/sentiment plots (`outputs/plots/`), elbow curve, cluster size distribution, stacked sentiment breakdown, stacked language distribution, individual word clouds, and grid layouts (`outputs/clusters/`), and qualitative documents (`outputs/docs/cluster_insights.md` and `outputs/docs/cluster_samples.md`).
+
 ---
 
 ## 5. Implementation Queue
@@ -103,3 +111,11 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 - **Registries**: Always update [.cursor/project/data_registry.md](.cursor/project/data_registry.md) when data files are scraped or processed.
 - **Ruff**: Before finalizing code changes, run `uv run ruff check` and `uv run ruff format` to ensure style correctness.
 - **No Emojis**: Do not use emojis in codebase files (Python, configs) other than documentation headers if justified.
+
+---
+
+## 8. Next Steps (Future Analysis)
+
+1. **Qualitative Synthesis:** [Complete] Implemented pipeline refinements (LSA/TruncatedSVD + custom stopwords) to generate highly coherent clusters, resolving the sticker-dominated and tiny 8-comment artifacts. Reorganized `outputs/` into subdirectories and updated descriptions in [cluster_insights.md](outputs/docs/cluster_insights.md) and [cluster_samples.md](outputs/docs/cluster_samples.md).
+2. **Interaction Matrix Interpretation:** Analyze the [reply_sentiment_heatmap.png](outputs/plots/reply_sentiment_heatmap.png) to determine how the community responds to negative/exoticizing parents vs. positive ones (soft power dynamics).
+3. **Drafting Findings:** Synthesize the sentiment transitions and topic frequencies into the final GEWORLD gastronationalism research paper and documentary script.

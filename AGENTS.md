@@ -16,7 +16,9 @@ Canonical project rules and data directories:
 
 **Conventions:**
 
-1. Do not commit raw data stored in `data/` or generated figures in `outputs/`.
+1. Do not commit raw data stored in `data/`. However, commit final generated figures and qualitative summaries in `outputs/` to preserve analytical visual artifacts.
 2. Ensure that code changes pass `ruff` check and format rules.
 3. Keep code modular, separate concerns between scraper engine, DOM/JSON parser, cleaning utilities, and sentiment models.
 4. Keep all document links (e.g. within HANDOFF.md, AGENTS.md, or project registries) relative and avoid absolute local file:/// paths.
+5. **Console Encoding (Windows):** Always run python execution commands prefixed with `$env:PYTHONIOENCODING="utf-8";` on Windows to avoid UnicodeEncodeError when printing emoji-heavy comments.
+6. **No Emojis in Code:** Emojis must not be used in code files (such as logs, print statements, or code comments). They are only permitted where necessary for parsing raw data/emojis, or in specific test cases.

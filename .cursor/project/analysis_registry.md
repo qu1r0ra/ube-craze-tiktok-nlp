@@ -9,14 +9,34 @@ This registry tracks the findings, sentiment models, and plot outputs generated 
 
 ## Visualization Figures
 
-Generated plots will be exported to `outputs/` and recorded here.
+Generated plots and qualitative reports are organized into specific subdirectories under `outputs/`.
 
-| Figure Filename                | Description                                                    | Output Path | Status  |
-| :----------------------------- | :------------------------------------------------------------- | :---------- | :------ |
-| `sentiment_distribution.png`   | Overall distribution of sentiment across all comments          | `outputs/`  | Pending |
-| `word_frequency_pride.png`     | High-frequency keywords from positive (pride) comments         | `outputs/`  | Pending |
-| `word_frequency_exotic.png`    | High-frequency keywords from negative/neutral comments         | `outputs/`  | Pending |
-| `word_frequency_bigrams.png`   | Top bigram phrases from positive vs negative/neutral comments  | `outputs/`  | Pending |
-| `word_frequency_trigrams.png`  | Top trigram phrases from positive vs negative/neutral comments | `outputs/`  | Pending |
-| `topic_clusters_sentiment.png` | Sentiment breakdown across unsupervised K-Means topic clusters | `outputs/`  | Pending |
-| `reply_sentiment_heatmap.png`  | Parent-reply comment sentiment transition heatmap              | `outputs/`  | Pending |
+### General Plots (`outputs/plots/`)
+
+| Figure Filename                                                                                                                         | Description                                                       | Status    |
+| :-------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------- | :-------- |
+| [sentiment_distribution.png](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/plots/sentiment_distribution.png)   | Overall distribution of sentiment across all comments             | Generated |
+| [word_frequency_pride.png](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/plots/word_frequency_pride.png)       | High-frequency keywords from positive (pride) comments            | Generated |
+| [word_frequency_neutral.png](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/plots/word_frequency_neutral.png)   | High-frequency keywords from neutral (context) comments           | Generated |
+| [word_frequency_exotic.png](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/plots/word_frequency_exotic.png)     | High-frequency keywords from negative (friction) comments         | Generated |
+| [word_frequency_bigrams.png](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/plots/word_frequency_bigrams.png)   | Top bigram phrases from positive, neutral, and negative comments  | Generated |
+| [word_frequency_trigrams.png](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/plots/word_frequency_trigrams.png) | Top trigram phrases from positive, neutral, and negative comments | Generated |
+| [reply_sentiment_heatmap.png](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/plots/reply_sentiment_heatmap.png) | Parent-reply comment sentiment transition heatmap                 | Generated |
+
+### Clustering Analytics (`outputs/clusters/`)
+
+| Figure Filename                                                                                                                                                    | Description                                                     | Status    |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------- | :-------- |
+| [kmeans_elbow_curve.png](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/clusters/kmeans_elbow_curve.png)                                   | K-Means Elbow curve (inertia analysis for K=2..12)              | Generated |
+| [cluster_size_distribution.png](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/clusters/cluster_size_distribution.png)                     | sorted distribution of comment counts per cluster               | Generated |
+| [cluster_sentiment_stacked.png](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/clusters/cluster_sentiment_stacked.png)                     | Stacked bar chart showing sentiment breakdown (%) per cluster   | Generated |
+| [cluster_language_stacked.png](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/clusters/cluster_language_stacked.png)                       | Stacked bar chart showing language distribution (%) per cluster | Generated |
+| [topic_clusters_wordclouds_sentiment.png](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/clusters/topic_clusters_wordclouds_sentiment.png) | Combined Word Clouds and sentiment distributions (grid format)  | Generated |
+| `cluster_[0-6]_wordcloud.png`                                                                                                                                      | Individual high-resolution word clouds for each topic cluster   | Generated |
+
+### Qualitative Analysis Reports (`outputs/docs/`)
+
+| Document Filename                                                                                                      | Description                                                       | Status    |
+| :--------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------- | :-------- |
+| [cluster_samples.md](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/docs/cluster_samples.md)   | Representative sample comments (25 liked + 25 random) per cluster | Generated |
+| [cluster_insights.md](file:///c:/Users/Quirora/Documents/GitHub/ube-craze-tiktok-nlp/outputs/docs/cluster_insights.md) | Refined thematic mappings and takeaways for the K=7 clusters      | Refined   |
