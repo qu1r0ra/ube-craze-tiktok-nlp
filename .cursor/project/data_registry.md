@@ -15,3 +15,16 @@ This section will list the 30 scraped TikTok video IDs, authors, titles, and com
 | Video ID | Author | Description / Topic               | Total Comments Scraped | Scraped Date |
 | :------- | :----- | :-------------------------------- | :--------------------- | :----------- |
 |          |        | _(To be populated post-scraping)_ |                        |              |
+
+## Search Methodology & Keywords
+
+The following keywords are used to identify and select the top 30 highest-engagement ube-related videos on TikTok within the target period (2024–2026):
+
+1. **`ube`** (Baseline keyword)
+2. **`ube craze`** (Trend & viral popularity)
+3. **`filipino ube`** (Gastronationalism & cultural origins)
+4. **`trader joes ube`** (Corporate commodification & westernization)
+5. **`foreigner tries ube`** (Cross-cultural tasting reactions)
+6. **`purple yam`** (Alternative botanical/English term)
+7. **`ube pronunciation`** (Language debate, "oob" vs "oo-beh" controversy)
+8. **`ube taste test`** (Sensory appreciation & comparison)
