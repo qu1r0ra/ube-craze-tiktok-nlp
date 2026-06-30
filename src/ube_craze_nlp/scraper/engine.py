@@ -352,7 +352,7 @@ async def main():
         return
 
     print(f"📋 Loaded {len(urls)} URLs from links.txt.")
-    engine = TikTokScraperEngine(headless=False)
+    engine = TikTokScraperEngine(headless=True)
 
     for i, url in enumerate(urls, 1):
         print(f"\n--- Progress: [{i}/{len(urls)}] ---")
