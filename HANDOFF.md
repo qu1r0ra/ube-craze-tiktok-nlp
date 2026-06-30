@@ -2,12 +2,12 @@
 
 Living document for agent-to-agent and session-to-session continuity for the GEWORLD (The Contemporary World) Ube Craze TikTok NLP project.
 
-| Field                  | Value                                                                                                                                                        |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Last updated**       | 2026-06-30                                                                                                                                                   |
-| **Last session focus** | Reorganized outputs/ into plots/, clusters/, and docs/, added new visualizations, resolved mathematical artifacts using LSA SVD, and tracked outputs in Git. |
-| **Active repo**        | `ube-craze-tiktok-nlp`                                                                                                                                       |
-| **Blockers**           | None (pipeline runs completed successfully)                                                                                                                  |
+| Field                  | Value                                                                                               |
+| ---------------------- | --------------------------------------------------------------------------------------------------- |
+| **Last updated**       | 2026-06-30                                                                                          |
+| **Last session focus** | Transferred run_pipeline.py to scripts/ and updated README.md with detailed results/visualizations. |
+| **Active repo**        | `ube-craze-tiktok-nlp`                                                                              |
+| **Blockers**           | None (pipeline runs completed successfully)                                                         |
 
 ---
 
