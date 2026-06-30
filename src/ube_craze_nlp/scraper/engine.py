@@ -200,16 +200,39 @@ class TikTokScraperEngine:
                 # Scroll comment container or body
                 await page.evaluate(
                     """
-                    const container =
-                        document.querySelector('[data-e2e="comment-list"]') ||
-                        document.querySelector('div[class*="CommentListContainer"]') ||
-                        document.querySelector('div[class*="DivCommentListContainer"]') ||
-                        document.querySelector('div[class*="CommentMain"]') ||
-                        document.querySelector('div[class*="DivCommentMain"]');
-                    if (container) {
-                        container.scrollTop = container.scrollHeight;
-                    } else {
-                        window.scrollTo(0, document.body.scrollHeight);
+                    () => {
+                        const selectors = [
+                            '[data-e2e="comment-list"]',
+                            'div[class*="CommentMain"]',
+                            'div[class*="DivCommentMain"]',
+                            'div[class*="CommentListContainer"]',
+                            'div[class*="DivCommentListContainer"]'
+                        ];
+                        let container = null;
+                        for (const sel of selectors) {
+                            const el = document.querySelector(sel);
+                            if (el) {
+                                const style = window.getComputedStyle(el);
+                                const scrollY = style.overflowY;
+                                const isScrollable = el.scrollHeight > el.clientHeight &&
+                                    (scrollY === 'auto' || scrollY === 'scroll');
+                                if (isScrollable) {
+                                    container = el;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!container) {
+                            for (const sel of selectors) {
+                                const el = document.querySelector(sel);
+                                if (el) { container = el; break; }
+                            }
+                        }
+                        if (container) {
+                            container.scrollTop = container.scrollHeight;
+                        } else {
+                            window.scrollTo(0, document.body.scrollHeight);
+                        }
                     }
                 """
                 )
