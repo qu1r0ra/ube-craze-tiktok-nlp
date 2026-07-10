@@ -1,10 +1,16 @@
 """Sentiment Analysis module using CardiffNLP XLM-RoBERTa model locally."""
 
 import logging
-from typing import Any
+from typing import TypedDict
 
 import torch
 from transformers import pipeline
+
+
+class SentimentResult(TypedDict):
+    label: str
+    score: float
+
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +46,7 @@ class SentimentAnalyzer:
             )
         return self._pipeline
 
-    def predict(self, text: str) -> dict[str, Any]:
+    def predict(self, text: str) -> SentimentResult:
         """Predict sentiment of a single text string."""
         if not text.strip():
             return {"label": "neutral", "score": 0.0}
@@ -57,7 +63,7 @@ class SentimentAnalyzer:
             logger.error(f"Error predicting sentiment: {e}")
             return {"label": "neutral", "score": 0.0}
 
-    def predict_batch(self, texts: list[str]) -> list[dict[str, Any]]:
+    def predict_batch(self, texts: list[str]) -> list[SentimentResult]:
         """Predict sentiment of a batch of text strings efficiently."""
         if not texts:
             return []
@@ -81,8 +87,10 @@ class SentimentAnalyzer:
                     (label if label in ["positive", "neutral", "negative"] else "neutral"),
                 )
                 results.append({"label": mapped_label, "score": float(res["score"])})
-        except Exception as e:
-            logger.error(f"Error during batch sentiment prediction: {e}")
+        except (RuntimeError, ValueError) as e:
+            logger.warning(
+                f"Batch sentiment prediction failed ({e}), falling back to single predictions"
+            )
             # Fallback to single predictions
             results = [self.predict(t) for t in texts]
 
@@ -101,11 +109,11 @@ def get_analyzer(batch_size: int = 16) -> SentimentAnalyzer:
     return _analyzer
 
 
-def analyze_sentiment(text: str) -> dict[str, Any]:
+def analyze_sentiment(text: str) -> SentimentResult:
     """Helper to analyze a single text string."""
     return get_analyzer().predict(text)
 
 
-def analyze_sentiment_batch(texts: list[str]) -> list[dict[str, Any]]:
+def analyze_sentiment_batch(texts: list[str]) -> list[SentimentResult]:
     """Helper to analyze a list of text strings."""
     return get_analyzer().predict_batch(texts)

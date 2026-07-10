@@ -40,35 +40,17 @@ def test_extract_rehydration_data():
     )
 
 
-def test_parse_video_details():
+def test_extract_rehydration_data_no_script():
+    """Test extracting JSON when script tag is missing."""
+    mock_html = "<html><body><h1>No data here</h1></body></html>"
+    data = extract_rehydration_data(mock_html)
+    assert data == {}
+
+
+def test_parse_video_details(mock_rehydration_data):
     """Test parsing video details from rehydration data dict."""
-    mock_rehydration = {
-        "__DEFAULT_SCOPE__": {
-            "webapp.video-detail": {
-                "itemInfo": {
-                    "itemStruct": {
-                        "id": "738291038",
-                        "author": {"uniqueId": "filipinofoodie"},
-                        "desc": "Traditional ube halaya recipe #ube #filipinofood",
-                        "createTime": 1719736800,  # 2024-06-30 UTC
-                        "video": {
-                            "duration": 60,
-                            "playAddr": "https://example.com/video.mp4",
-                        },
-                        "stats": {
-                            "playCount": 150000,
-                            "diggCount": 23000,
-                            "commentCount": 420,
-                            "shareCount": 1200,
-                            "downloadCount": 350,
-                        },
-                    }
-                }
-            }
-        }
-    }
     url = "https://www.tiktok.com/@filipinofoodie/video/738291038"
-    details = parse_video_details(mock_rehydration, url)
+    details = parse_video_details(mock_rehydration_data, url)
 
     assert details["video_id"] == "738291038"
     assert details["author"] == "filipinofoodie"
@@ -80,41 +62,22 @@ def test_parse_video_details():
     assert details["comment_count"] == 420
     assert details["share_count"] == 1200
     assert details["download_count"] == 350
-    assert details["create_time"] == "2024-06-30 08:40:00"  # 1719736800 epoch in UTC
+    assert details["create_time"] == "2024-06-30 08:40:00"
 
 
-def test_parse_comments_payload():
+def test_parse_video_details_missing_scope():
+    """Test parsing video details when __DEFAULT_SCOPE__ is empty."""
+    url = "https://www.tiktok.com/@filipinofoodie/video/738291038"
+    details = parse_video_details({}, url)
+    assert details["video_id"] == "738291038"
+    assert details["author"] == ""
+    assert details["desc"] == ""
+    assert details["create_time"] == ""
+
+
+def test_parse_comments_payload(mock_comments_payload):
     """Test parsing comments JSON payload with nested reply structures."""
-    mock_payload = {
-        "comments": [
-            {
-                "cid": "c001",
-                "text": "This is a top-level comment",
-                "digg_count": 85,
-                "create_time": 1719737000,
-                "user": {"unique_id": "commenter1", "nickname": "Commenter One"},
-                "reply_comment": [
-                    {
-                        "cid": "c001_r01",
-                        "text": "First reply to commenter1",
-                        "digg_count": 10,
-                        "create_time": 1719737100,
-                        "user": {"unique_id": "replier1", "nickname": "Replier One"},
-                    }
-                ],
-            },
-            {
-                "cid": "c002",
-                "text": "Another top-level comment",
-                "digg_count": 140,
-                "create_time": 1719737200,
-                "user": {"unique_id": "commenter2", "nickname": "Commenter Two"},
-                "reply_id": "0",
-            },
-        ]
-    }
-
-    parsed = parse_comments_payload(mock_payload)
+    parsed = parse_comments_payload(mock_comments_payload)
 
     # Total comments: 2 top-level + 1 reply = 3 comments
     assert len(parsed) == 3
@@ -140,3 +103,9 @@ def test_parse_comments_payload():
     assert parsed[2]["text"] == "Another top-level comment"
     assert parsed[2]["username"] == "commenter2"
     assert not parsed[2]["is_reply"]
+
+
+def test_parse_comments_payload_empty():
+    """Test parsing comments when payload is empty."""
+    assert parse_comments_payload({}) == []
+    assert parse_comments_payload({"comments": []}) == []

@@ -7,13 +7,22 @@ import nltk
 from lingua import Language, LanguageDetectorBuilder
 from stopwordsiso import stopwords
 
-# Ensure NLTK tokenizers are available
-for resource in ["tokenizers/punkt", "tokenizers/punkt_tab"]:
-    try:
-        nltk.data.find(resource)
-    except LookupError:
-        name = resource.split("/")[-1]
-        nltk.download(name, quiet=True)
+_nltk_downloaded = False
+
+
+def ensure_nltk_resources():
+    global _nltk_downloaded
+    if _nltk_downloaded:
+        return
+    # Ensure NLTK tokenizers are available
+    for resource in ["tokenizers/punkt", "tokenizers/punkt_tab"]:
+        try:
+            nltk.data.find(resource)
+        except LookupError:
+            name = resource.split("/")[-1]
+            nltk.download(name, quiet=True)
+    _nltk_downloaded = True
+
 
 logger = logging.getLogger(__name__)
 
@@ -33,8 +42,15 @@ FILTERED_LANGS = [
     Language.PORTUGUESE,
 ]
 
-# Create global detector instance
-detector = LanguageDetectorBuilder.from_languages(*(TARGET_LANGS + FILTERED_LANGS)).build()
+_detector = None
+
+
+def _get_detector():
+    global _detector
+    if _detector is None:
+        _detector = LanguageDetectorBuilder.from_languages(*(TARGET_LANGS + FILTERED_LANGS)).build()
+    return _detector
+
 
 # Load stopword lists
 ENGLISH_STOPWORDS = set(stopwords("en"))
@@ -99,12 +115,13 @@ def detect_language(text: str) -> str | None:
         return None
 
     try:
+        detector = _get_detector()
         detected = detector.detect_language_of(temp_text)
         if detected == Language.ENGLISH:
             return "en"
-        elif detected == Language.TAGALOG:
+        if detected == Language.TAGALOG:
             return "tl"
-        elif detected is not None:
+        if detected is not None:
             return "other"
     except Exception as e:
         logger.error(f"Error detecting language: {e}")
@@ -134,17 +151,16 @@ def normalize_text(text: str, remove_emojis: bool = False) -> str:
         text = text.encode("ascii", "ignore").decode("ascii")
 
     # Remove duplicate spaces and strip
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def tokenize_text(text: str) -> list[str]:
     """Tokenize text into lowercase words."""
+    ensure_nltk_resources()
     cleaned = normalize_text(text, remove_emojis=True)
     # Remove punctuation
     cleaned = re.sub(r"[^\w\s]", "", cleaned)
-    tokens = nltk.word_tokenize(cleaned.lower())
-    return tokens
+    return nltk.word_tokenize(cleaned.lower())
 
 
 def remove_stopwords(tokens: list[str]) -> list[str]:

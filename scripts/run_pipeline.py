@@ -1,13 +1,9 @@
 """Pipeline runner — executes notebooks 02, 03, and 04 sequentially without Jupyter."""
 
-import json
 import logging
+import subprocess
 import sys
 from pathlib import Path
-
-import matplotlib
-
-matplotlib.use("Agg")
 
 # Configure logging format
 logging.basicConfig(
@@ -21,27 +17,23 @@ def run_notebook(notebook_path: Path):
     logger.info(f"Executing: {notebook_path.name}")
     logger.info("=" * 60)
 
-    with open(notebook_path, encoding="utf-8") as f:
-        nb = json.load(f)
-
-    code_cells = []
-    for cell in nb.get("cells", []):
-        if cell.get("cell_type") == "code":
-            source = cell.get("source", [])
-            code = "".join(source) if isinstance(source, list) else source
-            code_cells.append(code)
-
-    full_code = "\n\n# --- Cell boundary ---\n\n".join(code_cells)
-
-    # Exec global namespace mocking display() to prevent notebook errors in terminal
-    global_namespace = {
-        "display": lambda x: logger.info(x),
-        "__file__": str(notebook_path.absolute()),
-    }
-
-    # Execute the concatenated Python code
-    exec(full_code, global_namespace)
-    logger.info(f"Finished: {notebook_path.name}\n")
+    try:
+        subprocess.run(
+            [
+                "jupyter",
+                "nbconvert",
+                "--to",
+                "notebook",
+                "--execute",
+                "--ExecutePreprocessor.timeout=600",
+                str(notebook_path),
+            ],
+            check=True,
+        )
+        logger.info(f"Finished: {notebook_path.name}\n")
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Error executing {notebook_path.name}: {e}")
+        raise
 
 
 def main():

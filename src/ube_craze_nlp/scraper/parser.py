@@ -9,6 +9,23 @@ from typing import Any
 logger = logging.getLogger(__name__)
 
 
+def _deep_get(d: dict, *keys, default=None):
+    for key in keys[:-1]:
+        if not isinstance(d, dict):
+            return default
+        d = d.get(key, {})
+    if not isinstance(d, dict):
+        return default
+    return d.get(keys[-1], default)
+
+
+def _format_timestamp(epoch: int) -> str:
+    if epoch > 0:
+        dt = datetime.fromtimestamp(epoch, UTC)
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
+    return ""
+
+
 def extract_rehydration_data(html_content: str) -> dict[str, Any]:
     """Extract __UNIVERSAL_DATA_FOR_REHYDRATION__ JSON from page HTML."""
     try:
@@ -19,7 +36,7 @@ def extract_rehydration_data(html_content: str) -> dict[str, Any]:
         )
         if match:
             return json.loads(match.group(1))
-    except Exception as e:
+    except (json.JSONDecodeError, KeyError, ValueError, TypeError) as e:
         logger.error(f"Error parsing rehydration script: {e}")
     return {}
 
@@ -49,11 +66,11 @@ def parse_video_details(rehydration_data: dict[str, Any], url: str) -> dict[str,
 
         # Get webapp video-detail struct
         scope = rehydration_data.get("__DEFAULT_SCOPE__", {})
-        item_struct = scope.get("webapp.video-detail", {}).get("itemInfo", {}).get("itemStruct")
+        item_struct = _deep_get(scope, "webapp.video-detail", "itemInfo", "itemStruct")
 
         if not item_struct:
             # Try alternative location in JSON
-            item_struct = scope.get("videoDetail", {}).get("itemInfo", {}).get("itemStruct")
+            item_struct = _deep_get(scope, "videoDetail", "itemInfo", "itemStruct")
 
         if item_struct:
             meta["video_id"] = item_struct.get("id", meta["video_id"])
@@ -64,9 +81,7 @@ def parse_video_details(rehydration_data: dict[str, Any], url: str) -> dict[str,
 
             # Create Time
             create_time_ts = int(item_struct.get("createTime", 0))
-            if create_time_ts > 0:
-                dt = datetime.fromtimestamp(create_time_ts, UTC)
-                meta["create_time"] = dt.strftime("%Y-%m-%d %H:%M:%S")
+            meta["create_time"] = _format_timestamp(create_time_ts)
 
             # Stats
             stats = item_struct.get("stats", {})
@@ -76,7 +91,7 @@ def parse_video_details(rehydration_data: dict[str, Any], url: str) -> dict[str,
             meta["share_count"] = stats.get("shareCount", 0)
             meta["download_count"] = stats.get("downloadCount", 0)
 
-    except Exception as e:
+    except (json.JSONDecodeError, KeyError, ValueError, TypeError) as e:
         logger.error(f"Error parsing rehydration video details: {e}")
 
     return meta
@@ -99,10 +114,7 @@ def parse_comments_payload(payload: dict[str, Any]) -> list[dict[str, Any]]:
             text = item.get("text", "")
             likes = item.get("digg_count", 0)
             create_time_ts = int(item.get("create_time", 0))
-            create_time = ""
-            if create_time_ts > 0:
-                dt = datetime.fromtimestamp(create_time_ts, UTC)
-                create_time = dt.strftime("%Y-%m-%d %H:%M:%S")
+            create_time = _format_timestamp(create_time_ts)
 
             user = item.get("user", {})
             username = user.get("unique_id", "")
@@ -144,10 +156,7 @@ def parse_comments_payload(payload: dict[str, Any]) -> list[dict[str, Any]]:
                 sub_text = sub_item.get("text", "")
                 sub_likes = sub_item.get("digg_count", 0)
                 sub_create_time_ts = int(sub_item.get("create_time", 0))
-                sub_create_time = ""
-                if sub_create_time_ts > 0:
-                    sub_dt = datetime.fromtimestamp(sub_create_time_ts, UTC)
-                    sub_create_time = sub_dt.strftime("%Y-%m-%d %H:%M:%S")
+                sub_create_time = _format_timestamp(sub_create_time_ts)
 
                 sub_user = sub_item.get("user", {})
                 sub_username = sub_user.get("unique_id", "")
@@ -167,7 +176,7 @@ def parse_comments_payload(payload: dict[str, Any]) -> list[dict[str, Any]]:
                     }
                 )
 
-        except Exception as e:
+        except (json.JSONDecodeError, KeyError, ValueError, TypeError) as e:
             logger.error(f"Error parsing individual comment item: {e}")
 
     return parsed_comments

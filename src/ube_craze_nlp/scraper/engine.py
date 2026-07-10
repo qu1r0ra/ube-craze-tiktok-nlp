@@ -23,9 +23,16 @@ logger = logging.getLogger(__name__)
 
 
 class TikTokScraperEngine:
-    def __init__(
-        self, headless: bool = False, delay_range: tuple[float, float] = (1.5, 3.5)
-    ):
+    MAX_SCROLL_ATTEMPTS = 80
+    STUCK_THRESHOLD = 15
+    MAX_REPLY_PASSES = 10
+    TARGET_COMMENTS_CAP = 100
+    DEFAULT_USER_AGENT = (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    )
+
+    def __init__(self, headless: bool = False, delay_range: tuple[float, float] = (1.5, 3.5)):
         self.headless = headless
         self.delay_range = delay_range
         ensure_dirs()
@@ -64,11 +71,8 @@ class TikTokScraperEngine:
                         if chunk:
                             f.write(chunk)
                 return True
-            else:
-                logger.warning(
-                    f"Video download failed: HTTP Status {response.status_code}"
-                )
-        except Exception as e:
+            logger.warning(f"Video download failed: HTTP Status {response.status_code}")
+        except requests.RequestException as e:
             logger.warning(f"Warning: Error downloading video: {e}")
         return False
 
@@ -80,6 +84,149 @@ class TikTokScraperEngine:
             self._download_sync, play_url, save_path, cookies, user_agent
         )
 
+    async def _launch_context(self, p):
+        browser = await p.chromium.launch(
+            headless=self.headless,
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--window-size=1280,720",
+            ],
+        )
+        context = await browser.new_context(
+            user_agent=self.DEFAULT_USER_AGENT,
+            viewport={"width": 1280, "height": 720},
+        )
+        page = await context.new_page()
+        await Stealth().apply_stealth_async(page)
+        return browser, context, page
+
+    async def _click_comments_tab(self, page):
+        from playwright.async_api import Error as PlaywrightError
+
+        try:
+            comments_tab = await page.evaluate(
+                """
+                () => {
+                    const span = Array.from(document.querySelectorAll('span'))
+                        .find(el => el.textContent.trim().toLowerCase() === 'comments');
+                    if (span) {
+                        const button = span.closest('button');
+                        if (button) {
+                            button.click();
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                """
+            )
+            if comments_tab:
+                logger.info("Clicked Comments tab button to load comments section.")
+                await self.random_sleep(2.0, 3.5)
+            else:
+                logger.info("Comments tab button not found (comments might be loaded directly).")
+        except PlaywrightError as e:
+            logger.error(f"Error clicking Comments tab: {e}")
+
+    async def _scroll_for_comments(self, page, target, unique_cids):
+        stuck_count = 0
+        last_comment_len = 0
+
+        for _attempt in range(self.MAX_SCROLL_ATTEMPTS):
+            current_top_level = len(unique_cids)
+            logger.info(f"   Collected top-level comments: {current_top_level}/{target}")
+
+            if current_top_level >= target and target > 0:
+                logger.info("   Target count of top-level comments reached.")
+                break
+
+            await page.evaluate(
+                """
+                () => {
+                    const selectors = [
+                        '[data-e2e="comment-list"]',
+                        'div[class*="CommentMain"]',
+                        'div[class*="DivCommentMain"]',
+                        'div[class*="CommentListContainer"]',
+                        'div[class*="DivCommentListContainer"]'
+                    ];
+                    let container = null;
+                    for (const sel of selectors) {
+                        const el = document.querySelector(sel);
+                        if (el) {
+                            const style = window.getComputedStyle(el);
+                            const scrollY = style.overflowY;
+                            const isScrollable = el.scrollHeight > el.clientHeight &&
+                                (scrollY === 'auto' || scrollY === 'scroll');
+                            if (isScrollable) {
+                                container = el;
+                                break;
+                            }
+                        }
+                    }
+                    if (!container) {
+                        for (const sel of selectors) {
+                            const el = document.querySelector(sel);
+                            if (el) { container = el; break; }
+                        }
+                    }
+                    if (container) {
+                        container.scrollTop = container.scrollHeight;
+                    } else {
+                        window.scrollTo(0, document.body.scrollHeight);
+                    }
+                }
+            """
+            )
+
+            await self.random_sleep(1.5, 3.0)
+
+            if len(unique_cids) == last_comment_len:
+                stuck_count += 1
+                if stuck_count >= self.STUCK_THRESHOLD:
+                    logger.info("   Scraped all available comments (reached end of feed).")
+                    break
+            else:
+                stuck_count = 0
+
+            last_comment_len = len(unique_cids)
+
+    async def _expand_reply_threads(self, page):
+        for pass_idx in range(self.MAX_REPLY_PASSES):
+            clicked = await page.evaluate(
+                """
+                () => {
+                    let buttons = Array.from(document.querySelectorAll('div, p, span, button'))
+                        .filter(el => {
+                            const text = el.innerText || el.textContent || '';
+                            return text.trim().toLowerCase().match(
+                                /^(view\\s+\\d+\\s+replies|view\\s+replies|view\\s+more\\s+replies|view\\s+more)$/i
+                            );
+                        });
+                    buttons.forEach(btn => {
+                        btn.scrollIntoView({block: "center", behavior: "instant"});
+                        btn.click();
+                    });
+                    return buttons.length;
+                }
+            """
+            )
+            logger.info(f"   Pass {pass_idx + 1}: Clicked {clicked} reply expand buttons.")
+            if clicked == 0:
+                break
+            await self.random_sleep(2.0, 3.5)
+
+    def _save_scrape_artifacts(
+        self, video_folder: Path, payloads: list[dict[str, Any]], meta: dict[str, Any]
+    ):
+        video_folder.mkdir(parents=True, exist_ok=True)
+        raw_payloads_path = video_folder / "comments_raw.json"
+        with open(raw_payloads_path, "w", encoding="utf-8") as f:
+            json.dump(payloads, f, indent=2, ensure_ascii=False)
+        metadata_path = video_folder / "metadata.json"
+        with open(metadata_path, "w", encoding="utf-8") as f:
+            json.dump(meta, f, indent=2, ensure_ascii=False)
+
     async def scrape_video(self, url: str) -> dict[str, Any]:
         """Scrape a single TikTok video metadata, comments, and replies."""
         logger.info(f"\nInitiating scrape for URL: {url}")
@@ -90,39 +237,15 @@ class TikTokScraperEngine:
             video_id = video_id_match.group(1)
 
         if not video_id:
-            logger.error(
-                "Error: Invalid TikTok Video URL (could not extract Video ID)."
-            )
+            logger.error("Error: Invalid TikTok Video URL (could not extract Video ID).")
             return {"status": "failed", "error": "Invalid URL"}
 
-        # Store intercepted comment API payloads
         intercepted_comment_payloads: list[dict[str, Any]] = []
         unique_cids: set[str] = set()
 
         async with async_playwright() as p:
-            # Launch Chromium browser with stealth settings
-            browser = await p.chromium.launch(
-                headless=self.headless,
-                args=[
-                    "--disable-blink-features=AutomationControlled",
-                    "--window-size=1280,720",
-                ],
-            )
+            browser, context, page = await self._launch_context(p)
 
-            # Create context with custom user agent
-            user_agent = (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-            )
-            context = await browser.new_context(
-                user_agent=user_agent,
-                viewport={"width": 1280, "height": 720},
-            )
-
-            page = await context.new_page()
-            await Stealth().apply_stealth_async(page)
-
-            # Network Interception handler
             async def handle_response(response):
                 if "/api/comment/list/" in response.url:
                     try:
@@ -130,203 +253,60 @@ class TikTokScraperEngine:
                         if "application/json" in content_type:
                             data = await response.json()
                             intercepted_comment_payloads.append(data)
-
-                            # Track unique top-level comments to determine when to stop scrolling
                             parsed = parse_comments_payload(data)
                             for c in parsed:
                                 if not c["is_reply"]:
                                     unique_cids.add(c["comment_id"])
-                    except Exception as e:
-                        # Fail silently for parsing errors on incomplete payloads
+                    except (json.JSONDecodeError, ValueError, KeyError, TypeError) as e:
                         logger.debug("Skipping malformed payload: %s", e)
 
             page.on("response", handle_response)
 
-            # Navigate to TikTok video
+            from playwright.async_api import Error as PlaywrightError
+
             try:
                 await page.goto(url, wait_until="domcontentloaded", timeout=45000)
-            except Exception as e:
+            except PlaywrightError as e:
                 logger.warning(f"Page navigation warning (timeout/incomplete): {e}")
 
             await self.random_sleep(3, 5)
 
-            # Click Comments tab if present (TikTok desktop view defaults to 'You may like')
-            try:
-                comments_tab = await page.evaluate(
-                    """
-                    () => {
-                        const span = Array.from(document.querySelectorAll('span'))
-                            .find(el => el.textContent.trim().toLowerCase() === 'comments');
-                        if (span) {
-                            const button = span.closest('button');
-                            if (button) {
-                                button.click();
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-                    """
-                )
-                if comments_tab:
-                    logger.info("Clicked Comments tab button to load comments section.")
-                    await self.random_sleep(2.0, 3.5)
-                else:
-                    logger.info(
-                        "Comments tab button not found (comments might be loaded directly)."
-                    )
-            except Exception as e:
-                logger.error(f"Error clicking Comments tab: {e}")
+            await self._click_comments_tab(page)
 
-            # Parse video details from page rehydration script
             html_content = await page.content()
             rehydration_data = extract_rehydration_data(html_content)
             video_meta = parse_video_details(rehydration_data, url)
 
-            # Resolve author name
             author = video_meta.get("author") or "unknown"
             logger.info(f"Video Author: @{author}")
             logger.info(f"Expected Comment Count: {video_meta.get('comment_count', 0)}")
 
-            # Scrape top-level comments by scrolling
             logger.info("Loading comments...")
-            stuck_count = 0
-            last_comment_len = 0
-            max_scroll_attempts = 80  # Safety net limit
+            target_comments = min(
+                self.TARGET_COMMENTS_CAP, video_meta.get("comment_count", self.TARGET_COMMENTS_CAP)
+            )
+            await self._scroll_for_comments(page, target_comments, unique_cids)
 
-            # Target 100 comments (or less if the video doesn't have that many)
-            target_comments = min(100, video_meta.get("comment_count", 100))
-
-            for attempt in range(max_scroll_attempts):
-                # Count current unique top-level comments
-                current_top_level = len(
-                    unique_cids
-                )  # already tracked in handle_response
-
-                logger.info(
-                    f"   Collected top-level comments: {current_top_level}/{target_comments}"
-                )
-
-                if current_top_level >= target_comments and target_comments > 0:
-                    logger.info("   Target count of top-level comments reached.")
-                    break
-
-                # Scroll comment container or body
-                await page.evaluate(
-                    """
-                    () => {
-                        const selectors = [
-                            '[data-e2e="comment-list"]',
-                            'div[class*="CommentMain"]',
-                            'div[class*="DivCommentMain"]',
-                            'div[class*="CommentListContainer"]',
-                            'div[class*="DivCommentListContainer"]'
-                        ];
-                        let container = null;
-                        for (const sel of selectors) {
-                            const el = document.querySelector(sel);
-                            if (el) {
-                                const style = window.getComputedStyle(el);
-                                const scrollY = style.overflowY;
-                                const isScrollable = el.scrollHeight > el.clientHeight &&
-                                    (scrollY === 'auto' || scrollY === 'scroll');
-                                if (isScrollable) {
-                                    container = el;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!container) {
-                            for (const sel of selectors) {
-                                const el = document.querySelector(sel);
-                                if (el) { container = el; break; }
-                            }
-                        }
-                        if (container) {
-                            container.scrollTop = container.scrollHeight;
-                        } else {
-                            window.scrollTo(0, document.body.scrollHeight);
-                        }
-                    }
-                """
-                )
-
-                await self.random_sleep(1.5, 3.0)
-
-                # Check if stuck
-                if len(unique_cids) == last_comment_len:
-                    stuck_count += 1
-                    if stuck_count >= 15:
-                        logger.info(
-                            "   Scraped all available comments (reached end of feed)."
-                        )
-                        break
-                else:
-                    stuck_count = 0
-
-                last_comment_len = len(unique_cids)
-
-            # Expand reply threads
             logger.info("Expanding replies (View replies)...")
-            # We run this in a loop to click the reply buttons multiple times as they appear
-            max_reply_passes = 10
-            for pass_idx in range(max_reply_passes):
-                clicked = await page.evaluate(
-                    """
-                    () => {
-                        let buttons = Array.from(document.querySelectorAll('div, p, span, button'))
-                            .filter(el => {
-                                const text = el.innerText || el.textContent || '';
-                                return text.trim().toLowerCase().match(
-                                    /^(view\\s+\\d+\\s+replies|view\\s+replies|view\\s+more\\s+replies|view\\s+more)$/i
-                                );
-                            });
-                        buttons.forEach(btn => {
-                            btn.scrollIntoView({block: "center", behavior: "instant"});
-                            btn.click();
-                        });
-                        return buttons.length;
-                    }
-                """
-                )
-                logger.info(
-                    f"   Pass {pass_idx + 1}: Clicked {clicked} reply expand buttons."
-                )
-                if clicked == 0:
-                    break
-                await self.random_sleep(2.0, 3.5)
+            await self._expand_reply_threads(page)
 
-            # Get cookies and user-agent for downloading video MP4
             playwright_cookies = await context.cookies()
             cookie_dict = {c["name"]: c["value"] for c in playwright_cookies}
 
-            # Setup directory structure
             video_folder = RAW_DATA_DIR / f"{author}_{video_id}"
-            video_folder.mkdir(parents=True, exist_ok=True)
+            self._save_scrape_artifacts(video_folder, intercepted_comment_payloads, video_meta)
 
-            # Save raw intercepted payloads
-            raw_payloads_path = video_folder / "comments_raw.json"
-            with open(raw_payloads_path, "w", encoding="utf-8") as f:
-                json.dump(intercepted_comment_payloads, f, indent=2, ensure_ascii=False)
-
-            # Save parsed metadata
-            metadata_path = video_folder / "metadata.json"
-            with open(metadata_path, "w", encoding="utf-8") as f:
-                json.dump(video_meta, f, indent=2, ensure_ascii=False)
-
-            # Download MP4 Video file
             play_addr = video_meta.get("play_addr")
             video_downloaded = False
             if play_addr:
                 logger.info("Downloading video MP4...")
                 mp4_path = video_folder / f"{video_id}.mp4"
                 video_downloaded = await self.download_video(
-                    play_addr, mp4_path, cookie_dict, user_agent
+                    play_addr, mp4_path, cookie_dict, self.DEFAULT_USER_AGENT
                 )
                 if video_downloaded:
                     logger.info(f"   Saved MP4: {mp4_path}")
 
-            # Shutdown browser
             await context.close()
             await browser.close()
 

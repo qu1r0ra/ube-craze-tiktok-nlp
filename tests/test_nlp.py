@@ -24,6 +24,9 @@ def test_normalize_text():
     # Test whitespace compaction
     assert normalize_text("  This    has   too  many   spaces.  ") == "This has too many spaces."
 
+    # Test emoji removal
+    assert normalize_text("Ube is 🔥", remove_emojis=True) == "Ube is"
+
 
 def test_tokenize_text():
     """Test tokenization and cleaning."""
@@ -61,6 +64,10 @@ def test_detect_language():
     # Spanish (should be classified as 'other')
     assert detect_language("Este postre filipino es delicioso y de color morado.") == "other"
 
+    # Empty string
+    assert detect_language("") is None
+    assert detect_language("   ") is None
+
 
 def test_is_target_language():
     """Test target language checker."""
@@ -94,3 +101,12 @@ def test_sentiment_analyzer_mocked(mock_pipeline):
     # Verify predicted mapped label and score
     assert res["label"] == "positive"
     assert res["score"] == 0.98
+
+    # Empty text
+    res_empty = analyzer.predict("")
+    assert res_empty["label"] == "neutral"
+    assert res_empty["score"] == 0.0
+
+    # Empty batch
+    res_empty_batch = analyzer.predict_batch([])
+    assert res_empty_batch == []
