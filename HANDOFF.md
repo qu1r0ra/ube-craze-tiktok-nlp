@@ -19,7 +19,7 @@ Living document for agent-to-agent and session-to-session continuity for the GEW
 4. Run `uv sync` to ensure your virtual environment is synchronized.
 5. Populate `links.txt` at the root with 67 target TikTok video URLs (done by developer).
 6. Run `uv run python -m ube_craze_nlp.scraper.engine` to scrape metadata and comment payloads.
-7. Run preprocessing, sentiment analysis, and visualization notebooks in the `notebooks/` directory. (On Windows, prefix command execution with `$env:PYTHONIOENCODING="utf-8";` to prevent encoding crashes on emojis).
+7. Run the full preprocessing, sentiment, and visualization pipeline using the pipeline script: `$env:PYTHONIOENCODING="utf-8"; uv run python scripts/run_pipeline.py`.
 8. Before ending a session, update this file and update `AGENTS.md` to record status.
 
 ---
