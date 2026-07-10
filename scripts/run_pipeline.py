@@ -1,3 +1,5 @@
+"""Pipeline runner — executes notebooks 02, 03, and 04 sequentially without Jupyter."""
+
 import json
 import logging
 import sys

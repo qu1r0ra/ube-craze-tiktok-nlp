@@ -23,22 +23,26 @@ logger = logging.getLogger(__name__)
 
 
 class TikTokScraperEngine:
-    def __init__(self, headless: bool = False, delay_range: tuple = (1.5, 3.5)):
+    def __init__(
+        self, headless: bool = False, delay_range: tuple[float, float] = (1.5, 3.5)
+    ):
         self.headless = headless
         self.delay_range = delay_range
         ensure_dirs()
 
-    def random_sleep(self, min_sec: float = None, max_sec: float = None):
+    async def random_sleep(
+        self, min_sec: float | None = None, max_sec: float | None = None
+    ) -> None:
         """Sleep for a random duration to mimic human behavior."""
         low = min_sec if min_sec is not None else self.delay_range[0]
         high = max_sec if max_sec is not None else self.delay_range[1]
         time_to_sleep = random.uniform(low, high)
-        return asyncio.sleep(time_to_sleep)
+        await asyncio.sleep(time_to_sleep)
 
-    async def download_video(
+    def _download_sync(
         self, play_url: str, save_path: Path, cookies: dict[str, str], user_agent: str
     ) -> bool:
-        """Download MP4 video stream using Playwright session headers and cookies."""
+        """Download MP4 video stream synchronously using Playwright session headers and cookies."""
         if not play_url:
             return False
         try:
@@ -67,6 +71,14 @@ class TikTokScraperEngine:
         except Exception as e:
             logger.warning(f"Warning: Error downloading video: {e}")
         return False
+
+    async def download_video(
+        self, play_url: str, save_path: Path, cookies: dict[str, str], user_agent: str
+    ) -> bool:
+        """Download MP4 video stream using Playwright session headers and cookies."""
+        return await asyncio.to_thread(
+            self._download_sync, play_url, save_path, cookies, user_agent
+        )
 
     async def scrape_video(self, url: str) -> dict[str, Any]:
         """Scrape a single TikTok video metadata, comments, and replies."""
@@ -124,9 +136,9 @@ class TikTokScraperEngine:
                             for c in parsed:
                                 if not c["is_reply"]:
                                     unique_cids.add(c["comment_id"])
-                    except Exception:
+                    except Exception as e:
                         # Fail silently for parsing errors on incomplete payloads
-                        pass
+                        logger.debug("Skipping malformed payload: %s", e)
 
             page.on("response", handle_response)
 
@@ -188,15 +200,10 @@ class TikTokScraperEngine:
             for attempt in range(max_scroll_attempts):
                 # Count current unique top-level comments
                 current_top_level = len(
-                    [
-                        c
-                        for payload in intercepted_comment_payloads
-                        for c in parse_comments_payload(payload)
-                        if not c["is_reply"]
-                    ]
-                )
+                    unique_cids
+                )  # already tracked in handle_response
 
-                print(
+                logger.info(
                     f"   Collected top-level comments: {current_top_level}/{target_comments}"
                 )
 
