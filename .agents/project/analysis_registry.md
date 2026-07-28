@@ -16,9 +16,9 @@ Generated plots and qualitative reports are organized into specific subdirectori
 | Figure Filename                                                                | Description                                                       | Status    |
 | :----------------------------------------------------------------------------- | :---------------------------------------------------------------- | :-------- |
 | [sentiment_distribution.png](../../outputs/plots/sentiment_distribution.png)   | Overall distribution of sentiment across all comments             | Generated |
-| [word_frequency_pride.png](../../outputs/plots/word_frequency_pride.png)       | High-frequency keywords from positive (pride) comments            | Generated |
-| [word_frequency_neutral.png](../../outputs/plots/word_frequency_neutral.png)   | High-frequency keywords from neutral (context) comments           | Generated |
-| [word_frequency_exotic.png](../../outputs/plots/word_frequency_exotic.png)     | High-frequency keywords from negative (friction) comments         | Generated |
+| [word_frequency_pride.png](../../outputs/plots/word_frequency_pride.png)       | High-frequency keywords from positive comments                    | Generated |
+| [word_frequency_neutral.png](../../outputs/plots/word_frequency_neutral.png)   | High-frequency keywords from neutral comments                     | Generated |
+| [word_frequency_exotic.png](../../outputs/plots/word_frequency_exotic.png)     | High-frequency keywords from negative comments                    | Generated |
 | [word_frequency_bigrams.png](../../outputs/plots/word_frequency_bigrams.png)   | Top bigram phrases from positive, neutral, and negative comments  | Generated |
 | [word_frequency_trigrams.png](../../outputs/plots/word_frequency_trigrams.png) | Top trigram phrases from positive, neutral, and negative comments | Generated |
 | [reply_sentiment_heatmap.png](../../outputs/plots/reply_sentiment_heatmap.png) | Parent-reply comment sentiment transition heatmap                 | Generated |
