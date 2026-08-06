@@ -77,7 +77,44 @@ def parse_video_details(rehydration_data: dict[str, Any], url: str) -> dict[str,
             meta["author"] = item_struct.get("author", {}).get("uniqueId", "")
             meta["desc"] = item_struct.get("desc", "")
             meta["duration"] = item_struct.get("video", {}).get("duration", 0)
-            meta["play_addr"] = item_struct.get("video", {}).get("playAddr", "")
+
+            # Extract highest bitrate/resolution HD 1080p stream from bitrateInfo or downloadAddr
+            video_data = item_struct.get("video", {})
+            best_play_addr = ""
+
+            bitrate_info = video_data.get("bitrateInfo", [])
+            if isinstance(bitrate_info, list) and bitrate_info:
+                # Sort streams by Bitrate and resolution descending
+                sorted_streams = sorted(
+                    bitrate_info,
+                    key=lambda s: (
+                        s.get("Bitrate", 0) if isinstance(s, dict) else 0,
+                        (
+                            (s.get("Width", 0) or 0) * (s.get("Height", 0) or 0)
+                            if isinstance(s, dict)
+                            else 0
+                        ),
+                    ),
+                    reverse=True,
+                )
+                for stream in sorted_streams:
+                    if isinstance(stream, dict):
+                        play_addr_obj = stream.get("PlayAddr", {})
+                        if isinstance(play_addr_obj, dict):
+                            url_list = play_addr_obj.get("UrlList", [])
+                            if url_list and isinstance(url_list, list) and url_list[0]:
+                                best_play_addr = url_list[0]
+                                break
+                        elif isinstance(play_addr_obj, str) and play_addr_obj:
+                            best_play_addr = play_addr_obj
+                            break
+
+            if not best_play_addr:
+                best_play_addr = video_data.get("downloadAddr", "") or video_data.get(
+                    "playAddr", ""
+                )
+
+            meta["play_addr"] = best_play_addr
 
             # Create Time
             create_time_ts = int(item_struct.get("createTime", 0))

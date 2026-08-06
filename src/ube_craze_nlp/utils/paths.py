@@ -10,6 +10,8 @@ DATA_DIR = ROOT_DIR / "data"
 RAW_DATA_DIR = DATA_DIR / "raw"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 FINAL_DATA_DIR = DATA_DIR / "final"
+VIDS_DIR = DATA_DIR / "vids"
+VIDS_1080P_DIR = DATA_DIR / "vids_1080p"
 
 # Reference and Outputs Directories
 REFERENCES_DIR = ROOT_DIR / "references"
@@ -28,6 +30,8 @@ def ensure_dirs():
     RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)
     PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
     FINAL_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    VIDS_DIR.mkdir(parents=True, exist_ok=True)
+    VIDS_1080P_DIR.mkdir(parents=True, exist_ok=True)
     REFERENCES_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUTS_PLOTS_DIR.mkdir(parents=True, exist_ok=True)
