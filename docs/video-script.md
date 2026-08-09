@@ -56,6 +56,38 @@ Similar dynamics appear in other international food debates, such as the online 
 
 ***Research Findings: (CJ)*** 
 
+*Timing target: approximately 2:40–3:00 depending on delivery speed and pauses. The optional cut is marked below.*
+
+*[Visual: TikTok comment montage. On-screen title: “What did people actually say?”]*
+
+Claire described how social media can turn food into a symbol of identity. To see how that identity was negotiated in practice, we analyzed **6,137 English, Tagalog, and Taglish comments** from our ube-related TikTok dataset using sentiment analysis and topic clustering.
+
+*[Visual: Sentiment distribution chart]*
+
+At first glance, the conversation is not simply celebratory. **35.8 percent** of comments were classified as neutral, **33.8 percent** as negative, and **30.4 percent** as positive. But neutral does not necessarily mean indifference. Many neutral comments were questions, explanations, or corrections about what ube is and how it should be pronounced.
+
+The positive comments show that international interest can be genuine. People said they loved the flavor, wanted to try Filipino desserts, and felt happy seeing others enjoy their culture’s food. But that appreciation often came with conditions: enjoy ube, but understand what you are enjoying.
+
+*[Visual: Comment screenshot — “it’s pronounced U-BE” — followed by pronunciation cluster word clouds]*
+
+Our first major pattern was pronunciation. Two clusters centered on corrections and backlash around viral mispronunciations such as “oob.” In these comments, pronunciation became more than a language lesson. It became a small but visible test of respect: if the world is going to consume ube, can it also learn to say its name?
+
+*[Visual: Split-screen labels: “UBE” and “TARO” / “PURPLE SWEET POTATO”]*
+
+The next pattern involved culinary boundaries. Commenters repeatedly explained that ube is not the same as taro or purple sweet potato. Some challenged products that use taro powder or purple coloring while calling themselves ube. This was not only an argument about flavor. It was a way of protecting the identity of an ingredient from being reduced to its color.
+
+*[Visual: Matcha-fication cluster and selected comments about farmers, prices, and shortages]*
+
+Finally, the discussion connected cultural recognition to material concerns. The largest cluster, containing **82.7 percent of comments**, also included criticism of agricultural neglect, farmer exploitation, rising prices, and supply problems. Another cluster compared ube’s future to matcha’s: a local tradition becoming a profitable global aesthetic while its cultural origin—and the people who produce it—fade into the background.
+
+*[Optional cut: Remove the 82.7-percent sentence and keep the farmer and matcha examples as on-screen text.]*
+
+Taken together, the seven clusters reveal a consistent condition. People welcome the spotlight on ube, but they want that spotlight to remember where it came from, say the name correctly, preserve the ingredient, and benefit the communities behind it. The comments show that ube’s globalization is not simply about whether people like the flavor. It is about whether they recognize the history and people behind it.
+
+*[Visual: Collage of appreciative and critical comments.]*
+
+And that is why appreciating ube means more than making it visible. It means understanding the culture that made it meaningful in the first place.
+
 ***Conclusion and Call to Action: (SHIN)***   
 The story of ube reflects the journey of Filipino culture in today's digital world. Through globalization and social media, a humble purple yam once known mainly within Filipino households has reached millions of people across continents. Every viral recipe, café menu, and food review has introduced new audiences to a small part of Filipino cuisine. This growing recognition is something many Filipinos celebrate with pride. But popularity also brings responsibility. 
 
@@ -72,4 +104,3 @@ Learn its story. Recognize its origins. Celebrate the people and traditions behi
 Gerz, Ş. (n.d.). *What is Gastronationalism & Culinary Nationalism?* https://gastronomyconsultation.com/NewsDetail/15/What-is-Gastronationalism---Culinary-Nationalism-.html  
 Pauline Gillera. (2026, June 12). The ube era: Social media turned a Filipino staple into an aesthetic. *SunStar Publishing Inc.*https://www.sunstar.com.ph/cebu/the-ube-era-social-media-turned-a-filipino-staple-into-an-aesthetic  
 *THE ROLE OF SOCIAL MEDIA IN GASTRONOMY INDUSTRY*. (n.d.). AgEcon Search. https://ageconsearch.umn.edu/record/273279/?ln=en\&v=pdf
-

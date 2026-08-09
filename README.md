@@ -9,11 +9,14 @@
 ![Year, Term, Course](https://img.shields.io/badge/AY2526--T3-GEWORLD-blue)
 ![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff) ![uv](https://img.shields.io/badge/uv-261230.svg?logo=uv&logoColor=#de5fe9) ![PyTorch](https://img.shields.io/badge/PyTorch-ee4c2c?logo=pytorch&logoColor=white) ![Hugging Face](https://img.shields.io/badge/Hugging%20Face-FFD21E?logo=huggingface&logoColor=000) ![Playwright](https://custom-icon-badges.demolab.com/badge/Playwright-2EAD33?logo=playwright&logoColor=fff) ![Jupyter](https://img.shields.io/badge/Jupyter-ffffff?logo=Jupyter)
 
-An analysis of Filipino digital gastronationalism on TikTok, specifically focusing on the global commercialization and trend of **Ube** (_Dioscorea alata_), using natural language processing (NLP) techniques. Created for the course **GEWORLD (The Contemporary World)**.
+An analysis of Filipino digital gastronationalism on TikTok, specifically focusing on the global commercialization and trend of **ube** (_Dioscorea alata_), using natural language processing (NLP) techniques. Created for the course **GEWORLD (The Contemporary World)**.
+
+The project’s final narrative deliverable is the documentary-style [video script](docs/video-script.md), supported by the reproducible NLP pipeline, visualizations, and qualitative analysis reports in this repository.
 
 ## Table of Contents <!-- omit from toc -->
 
 - [1. Introduction \& Background](#1-introduction--background)
+- [Project Status \& Deliverables](#project-status--deliverables)
 - [2. Project Structure](#2-project-structure)
 - [3. Getting Started](#3-getting-started)
   - [3.1. Technical Prerequisites](#31-technical-prerequisites)
@@ -47,6 +50,17 @@ To investigate these dynamics, this project implements an end-to-end NLP data pi
 
 For the full theoretical framing, methodology, and citations, please refer to the approved [GEWORLD Project Proposal](docs/proposal.md).
 
+## Project Status & Deliverables
+
+The research and video-planning work is complete enough for final editing and presentation.
+
+- **Video script:** [docs/video-script.md](docs/video-script.md), including the CJ research-findings segment and visual cues.
+- **Editor guide:** [docs/cj-editor-guide.md](docs/cj-editor-guide.md), with recommended comments, visualizations, screen treatment, timing, and cut priorities for CJ’s section.
+- **Research outputs:** sentiment, n-gram, clustering, and reply-dynamics figures in [outputs/plots/](outputs/plots/) and [outputs/clusters/](outputs/clusters/).
+- **Qualitative findings:** [cluster insights](outputs/docs/cluster_insights.md) and [representative comment samples](outputs/docs/cluster_samples.md).
+- **Study scope:** 67 curated TikTok targets and 6,137 retained English, Tagalog, and Taglish comments in the final analysis dataset.
+- **Video assets:** 66 successfully standardized and upscaled videos are available locally under `data/vids_1080p/`; raw and processed data remain ignored by design.
+
 ## 2. Project Structure
 
 A high-level overview of the repository organization:
@@ -56,9 +70,12 @@ A high-level overview of the repository organization:
 ├── data/                       # Ignored directory hosting the data pipeline
 │   ├── raw/                    # Raw scrapes: author_videoID folders with comments_raw.json, metadata.json, and video.mp4
 │   ├── processed/              # Filtered, cleaned, and language-normalized comments CSVs
-│   └── final/                  # Final consolidated sentiment datasets ready for plotting
-├── docs/                       # Technical documentation & project specifications
-│   └── proposal.md             # Approved GEWORLD project proposal
+│   ├── final/                  # Final consolidated sentiment datasets ready for plotting
+│   ├── vids/                   # Standardized source videos
+│   └── vids_1080p/             # Upscaled 1080p video assets for editing
+├── docs/                       # Research documentation and video deliverables
+│   ├── proposal.md             # Approved GEWORLD project proposal
+│   └── video-script.md         # Final documentary video script
 ├── notebooks/                  # Interactive Jupyter Notebooks for reproducing the pipeline
 │   ├── 01_scraping.ipynb       # Interactive web scraper testing and walkthrough
 │   ├── 02_preprocessing.ipynb  # Language filtering, emoji removal, and token cleaning
@@ -106,7 +123,7 @@ Ensure you have the following installed on your local machine:
 The scraper uses a root file named `links.txt` containing the target TikTok video URLs to scrape.
 
 - Empty lines and lines starting with `#` are ignored.
-- Currently, `links.txt` contains exactly 67 curated, high-engagement TikTok URLs categorized under key search terms (e.g., `#ube`, `#ube craze`, `#trader joes ube`, `#foreigner tries ube`, `#purple yam`, and `#ube pronunciation`).
+- Currently, `links.txt` contains 67 curated, high-engagement TikTok URLs categorized under key search terms (e.g., `#ube`, `#ube craze`, `#trader joes ube`, `#foreigner tries ube`, `#purple yam`, and `#ube pronunciation`). The repository contains 66 successfully downloaded and upscaled video assets; the target count and asset count are therefore not identical.
 
 ## 4. Running the Pipeline
 
@@ -155,7 +172,7 @@ uv run python scripts/run_pipeline.py
 
 ## 5. Key Visualizations & Results
 
-Below are key visualizations and takeaways extracted from the final dataset of **6,137 unique English, Tagalog, and Taglish comments** harvested across the 67 video targets:
+Below are key visualizations and takeaways extracted from the final dataset of **6,137 unique English, Tagalog, and Taglish comments** harvested across the 67 video targets. These findings are synthesized into the [final video script](docs/video-script.md).
 
 ### 5.1. Sentiment Distribution
 
@@ -212,6 +229,10 @@ A sentiment transition matrix tracks the relationship between parent comments an
 - **Positive Parent Synergy**: Positive parent comments are met with positive replies (45.9%), reflecting supportive spaces where digital gastronationalism acts as a source of community bonding and soft power.
 
 For more detailed qualitative analysis and specific comment samples from each cluster, see [outputs/docs/cluster_insights.md](outputs/docs/cluster_insights.md).
+
+### 5.5. Video narrative synthesis
+
+The video frames ube’s globalization as both cultural recognition and a site of contestation. The research-findings segment connects the quantitative sentiment split to seven recurring discussion arenas: pronunciation, appreciation, culinary boundaries, botanical accuracy, matcha-fication, agricultural concerns, and defensive backlash. Visual cues in the script identify where to use charts, comment screenshots, cluster word clouds, and synthesis collages.
 
 ## 6. NLP Methodology & Model
 
