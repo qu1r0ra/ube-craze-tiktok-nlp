@@ -54,39 +54,39 @@ When an ingredient goes coral purely for its aesthetic appeal, such as ube’s v
 
 Similar dynamics appear in other international food debates, such as the online disputes between South Korea and China regarding the origins and naming of kimchi. This controversy demonstrates how a traditional dish can quickly become a battleground for national identity when its cultural roots are challenged. Ultimately, digital gastronationalism extends far beyond simply marketing regional cuisine. As traditional foods become global trends, digital platforms provide communities with the essential tools needed to defend their heritage, educate international audiences, and safeguard their cultural identity.
 
-***Research Findings: (CJ)*** 
+***Research Findings: (CJ)***
 
-*Timing target: approximately 2:40–3:00 depending on delivery speed and pauses. The optional cut is marked below.*
+*Timing target: approximately 2:40–3:00 depending on delivery speed and pauses. Optional lines are marked so the section can stay within time.*
 
-*[Visual: TikTok comment montage. On-screen title: “What did people actually say?”]*
+*[Visual: Open `editor guide/01_research_overview/must_show.pdf`. Layer one appreciative comment over the opening footage, then add two or three supporting comments. On-screen title: “What did people actually say?”]*
 
-Claire described how social media can turn food into a symbol of identity. To see how that identity was negotiated in practice, we analyzed **6,137 English, Tagalog, and Taglish comments** from our ube-related TikTok dataset using sentiment analysis and topic clustering.
+Claire described how social media can turn food into a symbol of identity. We wanted to see what that looked like in the comments themselves, so we analyzed **6,137 English, Tagalog, and Taglish comments** from our ube-related TikTok dataset using sentiment analysis and topic clustering.
 
-*[Visual: Sentiment distribution chart]*
+*[Visual: Show `editor guide/02_sentiment/sentiment_distribution.png`. Use `editor guide/02_sentiment/must_show.pdf` for short comment cut-ins.]*
 
-At first glance, the conversation is not simply celebratory. **35.8 percent** of comments were classified as neutral, **33.8 percent** as negative, and **30.4 percent** as positive. But neutral does not necessarily mean indifference. Many neutral comments were questions, explanations, or corrections about what ube is and how it should be pronounced.
+The first thing that stood out is that the conversation is mixed. The model classified **35.8 percent** of comments as neutral, **33.8 percent** as negative, and **30.4 percent** as positive. But neutral does not automatically mean indifferent. A lot of those comments were questions, explanations, or corrections: What is ube? Is it taro? How do you actually say it?
 
-The positive comments show that international interest can be genuine. People said they loved the flavor, wanted to try Filipino desserts, and felt happy seeing others enjoy their culture’s food. But that appreciation often came with conditions: enjoy ube, but understand what you are enjoying.
+And the positive side is real too. People said they loved the flavor, wanted to try Filipino desserts, and felt happy seeing other people enjoy their culture’s food. What makes those comments interesting is that appreciation often comes with an invitation to learn. It is not just “this looks good.” It is more like: enjoy it, but understand what you are enjoying.
 
-*[Visual: Comment screenshot — “it’s pronounced U-BE” — followed by pronunciation cluster word clouds]*
+*[Visual: Briefly show `editor guide/03_topic_clusters/00_cluster_map.png`, then switch to `editor guide/03_topic_clusters/02_pronunciation/must_show.pdf` and `editor guide/03_topic_clusters/04_oob_backlash/must_show.pdf`. Hold one primary comment long enough to read; use the other comments as quick layered cut-ins.]*
 
-Our first major pattern was pronunciation. Two clusters centered on corrections and backlash around viral mispronunciations such as “oob.” In these comments, pronunciation became more than a language lesson. It became a small but visible test of respect: if the world is going to consume ube, can it also learn to say its name?
+That pattern becomes clearer when we look at the seven topic clusters. One cluster is almost a pronunciation lesson. Another captures the more emotional “oob” backlash around viral mispronunciations. Put together, they show something small but revealing: pronunciation became a low-stakes test of respect. If the world is going to consume ube, can it also learn to say its name?
 
-*[Visual: Split-screen labels: “UBE” and “TARO” / “PURPLE SWEET POTATO”]*
+*[Visual: Switch to `editor guide/03_topic_clusters/03_ube_vs_taro/must_show.pdf`. Layer a simple three-label card: `UBE` / `TARO` / `PURPLE SWEET POTATO`. Use `supporting.pdf` only if the narration has room.]*
 
-The next pattern involved culinary boundaries. Commenters repeatedly explained that ube is not the same as taro or purple sweet potato. Some challenged products that use taro powder or purple coloring while calling themselves ube. This was not only an argument about flavor. It was a way of protecting the identity of an ingredient from being reduced to its color.
+The next boundary was the ingredient itself. Commenters repeatedly explained that ube is not the same as taro or purple sweet potato. Some were reacting to products that use taro powder or purple coloring while calling themselves ube. So this is not only an argument about taste. It is also a way of saying that an ingredient should not be reduced to its color.
 
-*[Visual: Matcha-fication cluster and selected comments about farmers, prices, and shortages]*
+*[Visual: Show `editor guide/03_topic_clusters/06_agriculture_and_economy/must_show.pdf`, then switch to `editor guide/03_topic_clusters/05_matcha_fication/must_show.pdf`. Bring in `editor guide/03_topic_clusters/00_cluster_sentiment.png` as a quiet background chart.]*
 
-Finally, the discussion connected cultural recognition to material concerns. The largest cluster, containing **82.7 percent of comments**, also included criticism of agricultural neglect, farmer exploitation, rising prices, and supply problems. Another cluster compared ube’s future to matcha’s: a local tradition becoming a profitable global aesthetic while its cultural origin—and the people who produce it—fade into the background.
+And this is where the conversation gets bigger than dessert. The largest cluster contains **82.7 percent of comments in our dataset**. It is a broad mainstream-and-economy conversation, but inside it we also see criticism of agricultural neglect, farmer exploitation, rising prices, and supply problems. Another cluster compares ube’s future to matcha’s: a local tradition becoming a profitable global aesthetic while the people and place behind it risk fading into the background.
 
-*[Optional cut: Remove the 82.7-percent sentence and keep the farmer and matcha examples as on-screen text.]*
+*[Optional cut: Remove the 82.7-percent sentence and keep the farmer, price, and matcha comments on screen while the narration continues.]*
 
-Taken together, the seven clusters reveal a consistent condition. People welcome the spotlight on ube, but they want that spotlight to remember where it came from, say the name correctly, preserve the ingredient, and benefit the communities behind it. The comments show that ube’s globalization is not simply about whether people like the flavor. It is about whether they recognize the history and people behind it.
+What surprised us is how often the same question keeps returning in different forms: who gets recognized, who gets paid, and who gets remembered? The comments do not give us a simple story where everyone is either celebrating or rejecting globalization.
 
-*[Visual: Collage of appreciative and critical comments.]*
+*[Visual: Use `editor guide/04_synthesis/must_show.pdf`. Start with an appreciative comment, then add critical comments one at a time. End on the on-screen text: `Appreciation -> Recognition -> Responsibility`.]*
 
-And that is why appreciating ube means more than making it visible. It means understanding the culture that made it meaningful in the first place.
+Taken together, the seven clusters show a negotiation. People welcome the spotlight on ube, but they want that spotlight to remember where it came from, say the name correctly, preserve the ingredient, and benefit the communities behind it. In this dataset, appreciating ube means more than making it visible. It means understanding the culture that made it meaningful in the first place.
 
 ***Conclusion and Call to Action: (SHIN)***   
 The story of ube reflects the journey of Filipino culture in today's digital world. Through globalization and social media, a humble purple yam once known mainly within Filipino households has reached millions of people across continents. Every viral recipe, café menu, and food review has introduced new audiences to a small part of Filipino cuisine. This growing recognition is something many Filipinos celebrate with pride. But popularity also brings responsibility. 
