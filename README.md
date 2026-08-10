@@ -230,10 +230,6 @@ A sentiment transition matrix tracks the relationship between parent comments an
 
 For more detailed qualitative analysis and specific comment samples from each cluster, see [outputs/docs/cluster_insights.md](outputs/docs/cluster_insights.md).
 
-### 5.5. Video narrative synthesis
-
-The video frames ube’s globalization as both cultural recognition and a site of contestation. The research-findings segment connects the quantitative sentiment split to seven recurring discussion arenas: pronunciation, appreciation, culinary boundaries, botanical accuracy, matcha-fication, agricultural concerns, and defensive backlash. Visual cues in the script identify where to use charts, comment screenshots, cluster word clouds, and synthesis collages.
-
 ## 6. NLP Methodology & Model
 
 - **Sentiment Model**: CardiffNLP's [twitter-xlm-roberta-base-sentiment](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment) is a multilingual XLM-RoBERTa transformer fine-tuned on ~198M multilingual tweets. It handles mixed-language text (such as code-switching Taglish common in Filipino online spaces) much more robustly than English-only Lexicon models (e.g., VADER).
