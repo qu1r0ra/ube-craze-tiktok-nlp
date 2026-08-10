@@ -129,7 +129,7 @@ Keep these findings in this order:
 5. Recognition connects to farmers, prices, supply, and the matcha comparison.
 6. Appreciation is paired with recognition and responsibility.
 
-First remove the optional “What surprised us...” paragraph. Then remove supporting comments, not the primary comments. If more time must be cut, remove the 82.7% sentence and keep the farmer and matcha examples visible as on-screen evidence.
+First remove the optional 82.7% sentence. Then remove supporting comments, not the primary comments. If more time must be cut, keep the farmer and matcha examples visible as on-screen evidence while the narration continues.
 
 ## Minimum viable edit
 
