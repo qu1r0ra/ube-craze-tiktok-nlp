@@ -1,0 +1,168 @@
+"""Language filtering, text normalization, and stopword removal module."""
+
+import logging
+import re
+
+import nltk
+from lingua import Language, LanguageDetectorBuilder
+from stopwordsiso import stopwords
+
+_nltk_downloaded = False
+
+
+def ensure_nltk_resources():
+    global _nltk_downloaded
+    if _nltk_downloaded:
+        return
+    # Ensure NLTK tokenizers are available
+    for resource in ["tokenizers/punkt", "tokenizers/punkt_tab"]:
+        try:
+            nltk.data.find(resource)
+        except LookupError:
+            name = resource.split("/")[-1]
+            nltk.download(name, quiet=True)
+    _nltk_downloaded = True
+
+
+logger = logging.getLogger(__name__)
+
+# Build a language detector for English, Tagalog, and neighboring/foreign languages
+# This helps distinguish and filter out non-target languages while keeping Taglish
+# (which gets classified as EN or TL)
+TARGET_LANGS = [Language.ENGLISH, Language.TAGALOG]
+FILTERED_LANGS = [
+    Language.INDONESIAN,
+    Language.MALAY,
+    Language.SPANISH,
+    Language.VIETNAMESE,
+    Language.JAPANESE,
+    Language.CHINESE,
+    Language.KOREAN,
+    Language.THAI,
+    Language.PORTUGUESE,
+]
+
+_detector = None
+
+
+def _get_detector():
+    global _detector
+    if _detector is None:
+        _detector = LanguageDetectorBuilder.from_languages(*(TARGET_LANGS + FILTERED_LANGS)).build()
+    return _detector
+
+
+# Load stopword lists
+ENGLISH_STOPWORDS = set(stopwords("en"))
+TAGALOG_STOPWORDS = set(stopwords("tl"))
+ALL_STOPWORDS = ENGLISH_STOPWORDS.union(TAGALOG_STOPWORDS)
+
+# Custom stop words specifically for the K-Means/topic clustering feature space
+# (visual markers, search query terms, and colloquial Tagalog pronouns/particles)
+CLUSTERING_STOPWORDS = ALL_STOPWORDS.union(
+    {
+        "sticker",
+        "ube",
+        "philippines",
+        "filipino",
+        "filipinos",
+        "ph",
+        "tiktok",
+        "video",
+        "daw",
+        "muna",
+        "sya",
+        "nya",
+        "nung",
+        "yung",
+        "ang",
+        "ng",
+        "mga",
+        "sa",
+        "na",
+        "lang",
+        "pa",
+        "ba",
+        "po",
+        "ko",
+        "mo",
+        "at",
+        "rin",
+        "din",
+        "to",
+        "ong",
+        "si",
+        "ni",
+        "kuya",
+        "ate",
+        "starbucks",
+        "starbuck",
+        "drink",
+    }
+)
+
+
+def detect_language(text: str) -> str | None:
+    """Detect the language of the text. Returns 'en', 'tl', or 'other' (or None)."""
+    if not text.strip():
+        return None
+
+    # Pre-clean text slightly for language detector (remove URLs/usernames)
+    temp_text = re.sub(r"http\S+|www\S+", "", text)
+    temp_text = re.sub(r"@\w+", "", temp_text).strip()
+
+    if not temp_text:
+        return None
+
+    try:
+        detector = _get_detector()
+        detected = detector.detect_language_of(temp_text)
+        if detected == Language.ENGLISH:
+            return "en"
+        if detected == Language.TAGALOG:
+            return "tl"
+        if detected is not None:
+            return "other"
+    except Exception as e:
+        logger.error(f"Error detecting language: {e}")
+    return None
+
+
+def is_target_language(text: str) -> bool:
+    """Check if the text is in one of the target languages (English or Tagalog/Taglish)."""
+    lang = detect_language(text)
+    # If language detection is uncertain (None), we default to keeping it
+    return lang in ("en", "tl", None)
+
+
+def normalize_text(text: str, remove_emojis: bool = False) -> str:
+    """Normalize text by removing URLs, usernames, extra whitespace, and optionally emojis."""
+    if not text:
+        return ""
+
+    # Remove URLs
+    text = re.sub(r"https?://\S+|www\.\S+", "", text)
+
+    # Remove TikTok usernames (@username)
+    text = re.sub(r"@\w+", "", text)
+
+    if remove_emojis:
+        # Strip out non-ascii characters (coarse emoji removal)
+        text = text.encode("ascii", "ignore").decode("ascii")
+
+    # Remove duplicate spaces and strip
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def tokenize_text(text: str) -> list[str]:
+    """Tokenize text into lowercase words."""
+    ensure_nltk_resources()
+    cleaned = normalize_text(text, remove_emojis=True)
+    # Remove punctuation
+    cleaned = re.sub(r"[^\w\s]", "", cleaned)
+    return nltk.word_tokenize(cleaned.lower())
+
+
+def remove_stopwords(tokens: list[str]) -> list[str]:
+    """Remove English and Tagalog stopwords from a list of tokens."""
+    return [token for token in tokens if token not in ALL_STOPWORDS and len(token) > 1]

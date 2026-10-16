@@ -1,0 +1,8 @@
+- Before maintaining the showcase or preparing public artifacts, read [HANDOFF.md](HANDOFF.md) and [docs/privacy.md](docs/privacy.md).
+- For historical implementation context, read [.agents/rules/project-overview.md](.agents/rules/project-overview.md) and [.agents/rules/tech-stack.md](.agents/rules/tech-stack.md).
+- For data or analysis work, read [.agents/project/data_registry.md](.agents/project/data_registry.md) and [.agents/project/analysis_registry.md](.agents/project/analysis_registry.md). Course scope is recorded in [docs/proposal.md](docs/proposal.md).
+- Keep observations, media, notebook outputs, and generated reports under ignored local storage. Publish only reviewed aggregates or expressly synthetic examples under the privacy boundary above.
+- Use relative paths for repository Markdown links; avoid absolute local file URLs.
+- On Windows, run Python with `PYTHONIOENCODING=utf-8`.
+- Keep Python code and logs free of emojis; invented parser fixtures may exercise emoji handling.
+- Use module-level `logging` for new diagnostics.
