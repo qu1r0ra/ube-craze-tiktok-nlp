@@ -1,3 +1,5 @@
+"""Invented parser fixtures; no observed users, comments, or videos."""
+
 import pytest
 
 
@@ -9,7 +11,7 @@ def mock_rehydration_data():
                 "itemInfo": {
                     "itemStruct": {
                         "id": "738291038",
-                        "author": {"uniqueId": "filipinofoodie"},
+                        "author": {"uniqueId": "synthetic_example"},
                         "desc": "Traditional ube halaya recipe #ube #filipinofood",
                         "createTime": 1719736800,
                         "video": {

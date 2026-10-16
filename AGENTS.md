@@ -1,18 +1,8 @@
-# Ube Craze NLP — Agent Index
-
-| Resource              | Path                                                                         |
-| :-------------------- | :--------------------------------------------------------------------------- |
-| **Workspace Handoff** | [HANDOFF.md](HANDOFF.md)                                                     |
-| Tech Stack Reference  | [.agents/rules/tech-stack.md](.agents/rules/tech-stack.md)                   |
-| Project Overview      | [.agents/rules/project-overview.md](.agents/rules/project-overview.md)       |
-| Data Registry         | [.agents/project/data_registry.md](.agents/project/data_registry.md)         |
-| Analysis Registry     | [.agents/project/analysis_registry.md](.agents/project/analysis_registry.md) |
-| Approved Proposal     | [docs/proposal.md](docs/proposal.md)                                         |
-
-**Conventions:**
-
-1. **No Raw Data Commits**: Keep `data/` ignored; commit figures & summaries in `outputs/`.
-2. **Relative Links Only**: Use relative paths in markdown links (no absolute `file:///` URLs).
-3. **Windows Encoding**: Run Python commands with `$env:PYTHONIOENCODING="utf-8";` on Windows.
-4. **No Emojis in Code**: Emojis are forbidden in Python code/logs (permitted only in parser tests).
-5. **Logging over Print**: Use standard module-level `logging` (`logger = logging.getLogger(__name__)`).
+- Before maintaining the showcase or preparing public artifacts, read [HANDOFF.md](HANDOFF.md) and [docs/privacy.md](docs/privacy.md).
+- For historical implementation context, read [.agents/rules/project-overview.md](.agents/rules/project-overview.md) and [.agents/rules/tech-stack.md](.agents/rules/tech-stack.md).
+- For data or analysis work, read [.agents/project/data_registry.md](.agents/project/data_registry.md) and [.agents/project/analysis_registry.md](.agents/project/analysis_registry.md). Course scope is recorded in [docs/proposal.md](docs/proposal.md).
+- Keep observations, media, notebook outputs, and generated reports under ignored local storage. Publish only reviewed aggregates or expressly synthetic examples under the privacy boundary above.
+- Use relative paths for repository Markdown links; avoid absolute local file URLs.
+- On Windows, run Python with `PYTHONIOENCODING=utf-8`.
+- Keep Python code and logs free of emojis; invented parser fixtures may exercise emoji handling.
+- Use module-level `logging` for new diagnostics.

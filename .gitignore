@@ -219,3 +219,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Historical observations, media, and generated quote/report packages stay local.
+outputs/
+scratch/
+*.mp4
+*.mov

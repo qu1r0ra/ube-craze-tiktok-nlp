@@ -49,11 +49,11 @@ def test_extract_rehydration_data_no_script():
 
 def test_parse_video_details(mock_rehydration_data):
     """Test parsing video details from rehydration data dict."""
-    url = "https://www.tiktok.com/@filipinofoodie/video/738291038"
+    url = "https://example.invalid/@synthetic_example/video/738291038"
     details = parse_video_details(mock_rehydration_data, url)
 
     assert details["video_id"] == "738291038"
-    assert details["author"] == "filipinofoodie"
+    assert details["author"] == "synthetic_example"
     assert details["desc"] == "Traditional ube halaya recipe #ube #filipinofood"
     assert details["duration"] == 60
     assert details["play_addr"] == "https://example.com/video.mp4"
@@ -67,7 +67,7 @@ def test_parse_video_details(mock_rehydration_data):
 
 def test_parse_video_details_missing_scope():
     """Test parsing video details when __DEFAULT_SCOPE__ is empty."""
-    url = "https://www.tiktok.com/@filipinofoodie/video/738291038"
+    url = "https://example.invalid/@synthetic_example/video/738291038"
     details = parse_video_details({}, url)
     assert details["video_id"] == "738291038"
     assert details["author"] == ""

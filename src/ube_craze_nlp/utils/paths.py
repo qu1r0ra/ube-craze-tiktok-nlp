@@ -15,7 +15,7 @@ VIDS_1080P_DIR = DATA_DIR / "vids_1080p"
 
 # Reference and Outputs Directories
 REFERENCES_DIR = ROOT_DIR / "references"
-OUTPUTS_DIR = ROOT_DIR / "outputs"
+OUTPUTS_DIR = DATA_DIR / "derived"
 OUTPUTS_PLOTS_DIR = OUTPUTS_DIR / "plots"
 OUTPUTS_CLUSTERS_DIR = OUTPUTS_DIR / "clusters"
 OUTPUTS_DOCS_DIR = OUTPUTS_DIR / "docs"

@@ -20,7 +20,9 @@ def test_normalize_text():
         == "Check this out: and comment!"
     )
     # Test username removal
-    assert normalize_text("Thanks for sharing @filipinofoodie! #ube") == "Thanks for sharing ! #ube"
+    assert (
+        normalize_text("Thanks for sharing @synthetic_example! #ube") == "Thanks for sharing ! #ube"
+    )
     # Test whitespace compaction
     assert normalize_text("  This    has   too  many   spaces.  ") == "This has too many spaces."
 

@@ -1,240 +1,33 @@
-# ube-craze-tiktok-nlp <!-- omit from toc -->
+# Ube discourse NLP: course showcase
 
-<p align="center">
-  <img src="assets/the_ube_phenomenon.webp" alt="The Ube Phenomenon" width="100%">
-  <br>
-  <em>Image Source: <a href="https://lifestyleasia-onemega.com/dining/the-world-is-crazy-about-ube/">Lifestyle Asia (One Mega)</a></em>
-</p>
+An archived GEWORLD (The Contemporary World) course project exploring TikTok discussions about ube through language filtering, multilingual sentiment classification, and TF-IDF/LSA clustering. Publication revival is not planned.
 
-![Year, Term, Course](https://img.shields.io/badge/AY2526--T3-GEWORLD-blue)
-![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff) ![uv](https://img.shields.io/badge/uv-261230.svg?logo=uv&logoColor=#de5fe9) ![PyTorch](https://img.shields.io/badge/PyTorch-ee4c2c?logo=pytorch&logoColor=white) ![Hugging Face](https://img.shields.io/badge/Hugging%20Face-FFD21E?logo=huggingface&logoColor=000) ![Playwright](https://custom-icon-badges.demolab.com/badge/Playwright-2EAD33?logo=playwright&logoColor=fff) ![Jupyter](https://img.shields.io/badge/Jupyter-ffffff?logo=Jupyter)
+## What remains useful
 
-An analysis of Filipino digital gastronationalism on TikTok, specifically focusing on the global commercialization and trend of **ube** (_Dioscorea alata_), using natural language processing (NLP) techniques. Created for the course **GEWORLD (The Contemporary World)**.
-
-The project’s final narrative deliverable is the documentary-style [video script](docs/video-script.md), supported by the reproducible NLP pipeline, visualizations, and qualitative analysis reports in this repository.
-
-## Table of Contents <!-- omit from toc -->
-
-- [1. Introduction \& Background](#1-introduction--background)
-- [Project Status \& Deliverables](#project-status--deliverables)
-- [2. Project Structure](#2-project-structure)
-- [3. Getting Started](#3-getting-started)
-  - [3.1. Technical Prerequisites](#31-technical-prerequisites)
-  - [3.2. Installation](#32-installation)
-  - [3.3. Target Videos (`links.txt`)](#33-target-videos-linkstxt)
-- [4. Running the Pipeline](#4-running-the-pipeline)
-  - [4.1. Step 1: Bulk Scraping](#41-step-1-bulk-scraping)
-  - [4.2. Step 2: Preprocessing \& Language Filtering](#42-step-2-preprocessing--language-filtering)
-  - [4.3. Step 3: Sentiment Analysis](#43-step-3-sentiment-analysis)
-  - [4.4. Step 4: NLP Analysis \& Visualization](#44-step-4-nlp-analysis--visualization)
-- [5. Key Visualizations \& Results](#5-key-visualizations--results)
-  - [5.1. Sentiment Distribution](#51-sentiment-distribution)
-  - [5.2. Topic Clustering (K=7, TF-IDF + LSA)](#52-topic-clustering-k7-tf-idf--lsa)
-  - [5.3. Phrase Frequencies (N-Grams)](#53-phrase-frequencies-n-grams)
-  - [5.4. Reply Sentiment Dynamics](#54-reply-sentiment-dynamics)
-- [6. NLP Methodology \& Model](#6-nlp-methodology--model)
-- [7. License](#7-license)
-
-## 1. Introduction & Background
-
-This project explores the phenomenon of **digital gastronationalism** (DeSoucey, 2010; Jin, 2025) through the lens of the global popularity of **ube** (purple yam). As a staple of Filipino culinary heritage, ube has transitioned from a traditional ingredient associated with family gatherings and regional identity to a highly commodified global food trend popularized on visual social media platforms like TikTok.
-
-This transformation has sparked ongoing online discourse regarding **cultural ownership, authenticity, and representation**. When foreign content creators or corporate entities exoticize or market ube solely for its vibrant purple hue without acknowledging its cultural roots, it can trigger concerns of cultural dilution or erasure. Conversely, digital gastronationalism empowers the Filipino diaspora and local users to reclaim their narrative, assert cultural authority, and exercise soft power online.
-
-To investigate these dynamics, this project implements an end-to-end NLP data pipeline:
-
-1. **TikTok Scraper**: A network-intercepting Playwright scraper that fetches metadata, comments, and nested reply threads.
-2. **Language Filter**: Filtering out foreign-language commentary to focus strictly on English, Tagalog, and Taglish commentary using the `lingua-language-detector` library.
-3. **Multilingual Sentiment Model**: Local batch inference using CardiffNLP's XLM-RoBERTa transformer (`twitter-xlm-roberta-base-sentiment`) to classify sentiment.
-4. **Text Mining & Clustering**: Sentiment interaction matrices, bigram/trigram extraction, and unsupervised K-Means clustering to discover emerging themes in comment discussions.
-
-For the full theoretical framing, methodology, and citations, please refer to the approved [GEWORLD Project Proposal](docs/proposal.md).
-
-## Project Status & Deliverables
-
-The research and video-planning work is complete enough for final editing and presentation.
-
-- **Video script:** [docs/video-script.md](docs/video-script.md), including the CJ research-findings segment and visual cues.
-- **Editor guide:** [docs/cj-editor-guide.md](docs/cj-editor-guide.md), with recommended comments, visualizations, screen treatment, timing, and cut priorities for CJ’s section.
-- **Research outputs:** sentiment, n-gram, clustering, and reply-dynamics figures in [outputs/plots/](outputs/plots/) and [outputs/clusters/](outputs/clusters/).
-- **Qualitative findings:** [cluster insights](outputs/docs/cluster_insights.md) and [representative comment samples](outputs/docs/cluster_samples.md).
-- **Study scope:** 67 curated TikTok targets and 6,137 retained English, Tagalog, and Taglish comments in the final analysis dataset.
-- **Video assets:** 66 successfully standardized and upscaled videos are available locally under `data/vids_1080p/`; raw and processed data remain ignored by design.
-
-## 2. Project Structure
-
-A high-level overview of the repository organization:
-
-```text
-.
-├── data/                       # Ignored directory hosting the data pipeline
-│   ├── raw/                    # Raw scrapes: author_videoID folders with comments_raw.json, metadata.json, and video.mp4
-│   ├── processed/              # Filtered, cleaned, and language-normalized comments CSVs
-│   ├── final/                  # Final consolidated sentiment datasets ready for plotting
-│   ├── vids/                   # Standardized source videos
-│   └── vids_1080p/             # Upscaled 1080p video assets for editing
-├── docs/                       # Research documentation and video deliverables
-│   ├── proposal.md             # Approved GEWORLD project proposal
-│   └── video-script.md         # Final documentary video script
-├── notebooks/                  # Interactive Jupyter Notebooks for reproducing the pipeline
-│   ├── 01_scraping.ipynb       # Interactive web scraper testing and walkthrough
-│   ├── 02_preprocessing.ipynb  # Language filtering, emoji removal, and token cleaning
-│   ├── 03_sentiment_analysis.ipynb # XLM-RoBERTa transformer inference
-│   └── 04_visualization.ipynb  # N-grams, K-Means clustering, heatmaps, and plotting
-├── outputs/                    # Exported figures, plots, and qualitative analysis documents
-│   ├── clusters/               # Topic cluster statistics, size/sentiment distributions, and word clouds
-│   ├── docs/                   # Qualitative analysis documents (insights and comment samples)
-│   └── plots/                  # General sentiment distributions and bigram/trigram frequencies
-├── src/                        # Core Python package codebase
-│   └── ube_craze_nlp/
-│       ├── nlp/                # Text cleaning (clean.py) and sentiment inference (sentiment.py)
-│       ├── scraper/            # Playwright stealth driver (engine.py) and response parser (parser.py)
-│       └── utils/              # Centralized path configurations (paths.py)
-├── tests/                      # Unit test suites for the scraper and cleaning algorithms
-├── pyproject.toml              # Unified dependency configuration managed by uv
-├── links.txt                   # Root configuration file containing target video URLs
-└── LICENSE                     # Project license file
-```
-
-## 3. Getting Started
-
-### 3.1. Technical Prerequisites
-
-Ensure you have the following installed on your local machine:
-
-1. **Git**: Used to clone this repository.
-2. **Python `>=3.11`**: (Managed by `uv` automatically if not present).
-3. **uv**: Our unified Python package and project manager. Installation instructions: <https://docs.astral.sh/uv/getting-started/installation/>.
-
-### 3.2. Installation
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/qu1r0ra/ube-craze-tiktok-nlp
-   ```
-2. Navigate to the project root and synchronize dependencies (this automatically sets up a local virtual environment `.venv`):
-   ```bash
-   cd ube-craze-tiktok-nlp
-   uv sync
-   ```
-
-### 3.3. Target Videos (`links.txt`)
-
-The scraper uses a root file named `links.txt` containing the target TikTok video URLs to scrape.
-
-- Empty lines and lines starting with `#` are ignored.
-- Currently, `links.txt` contains 67 curated, high-engagement TikTok URLs categorized under key search terms (e.g., `#ube`, `#ube craze`, `#trader joes ube`, `#foreigner tries ube`, `#purple yam`, and `#ube pronunciation`). The repository contains 66 successfully downloaded and upscaled video assets; the target count and asset count are therefore not identical.
-
-## 4. Running the Pipeline
-
-You can reproduce the full results by running the automated package commands or by executing the interactive Jupyter Notebooks.
-
-### 4.1. Step 1: Bulk Scraping
-
-To execute the scraper in headless mode across all 67 target URLs in `links.txt`:
+`src/ube_craze_nlp/` contains the original parser, preprocessing, sentiment wrapper, and local video utilities. `notebooks/` preserves the coursework pipeline with cleared outputs. Parser tests use invented fixtures. A small public demonstration is available without collecting data or downloading models:
 
 ```bash
-uv run python -m ube_craze_nlp.scraper.engine
+python scripts/build_editor_guide_assets.py
 ```
 
-This script will:
+This generates `examples/synthetic-comments.md` from a fixed, explicitly synthetic set. These examples are invented teaching material, not anonymized or paraphrased observations, and are not used to calculate the historical results.
 
-- Boot up a stealth Playwright Chromium instance.
-- Navigate to each URL, click the comments tab, scroll to retrieve up to 100 top-level comments, and click "View replies" to expand sub-comment threads.
-- Save the raw intercepted JSON comments, video metadata, and the original `.mp4` video file under `data/raw/{author}_{video_id}/`.
+## Historical scope and interpretation
 
-### 4.2. Step 2: Preprocessing & Language Filtering
+The course report recorded 67 curated video targets and 6,137 retained comments. Its model labels were 35.8% neutral, 33.8% negative, and 30.4% positive. These are historical descriptive figures, not a representative estimate of Philippine opinion or a fresh reproduction. Raw observations are deliberately not supplied in this showcase.
 
-Run through the preprocessing stage by opening `notebooks/02_preprocessing.ipynb`. It reads raw JSON comments, sanitizes URLs and usernames, strips foreign text while keeping Tagalog, English, and Taglish via `lingua-language-detector`, and exports normalized tokens to `data/processed/cleaned_comments.csv`.
+The pipeline used English/Tagalog filtering, CardiffNLP's `twitter-xlm-roberta-base-sentiment`, and exploratory K-means clustering of TF-IDF/LSA features. Model sentiment is not a validated measure of cultural ownership, authenticity, or nationalism. Code-switching, sarcasm, model-domain mismatch, curated/high-engagement sampling, uneven reply coverage, and repeated authors can affect interpretation. Topic labels were informal interpretations, not validated research findings. No local sentiment gold set, sampling uncertainty, or causal analysis is claimed.
 
-### 4.3. Step 3: Sentiment Analysis
+## Data and publication boundary
 
-Open `notebooks/03_sentiment_analysis.ipynb` to run CardiffNLP's local XLM-RoBERTa model on the cleaned data. It classifies each comment's sentiment into **positive, neutral, or negative** and exports the annotated dataset to `data/final/sentiment_comments.csv`.
+Identifiable comment excerpts, creator/target registries, copied videos, editor-guide quote banks, and unreviewed derived images have been removed from the candidate tree. The historical generator that redistributed excerpts has been replaced with the synthetic demonstration. Local analysis outputs now go under ignored `data/derived/`; removing a handle alone does not anonymize searchable text.
 
-### 4.4. Step 4: NLP Analysis & Visualization
+This is a **current-tree correction**. Earlier commits and external copies may still contain the removed material. The repository is withheld from public CV/profile linking pending verified history remediation and final permissions/privacy review. See [privacy and artifact notes](docs/privacy.md). No legal clearance or complete historical erasure is claimed.
 
-Open `notebooks/04_visualization.ipynb` to run:
+The original scraper is retained as archived coursework code, without a supplied target list or a recommendation to resume collection. New collection and redistribution require their own justified purpose, applicable privacy/platform requirements, permissions, and safeguards. This maintenance did not scrape, download creator media, upload a documentary, or change an external course deliverable.
 
-- **N-Gram Frequency Distributions**: Extracting the top bigrams and trigrams to identify the most common phrases.
-- **K-Means Clustering**: Clustering comments using TF-IDF representation and analyzing cluster keywords.
-- **Sentiment Heatmap**: Creating transition matrices plotting parent comments vs. reply sentiments to analyze how replies align with or contest parent threads.
-- **Result Visuals**: Automatically exporting plots and documents to the reorganized `outputs/` subdirectories.
+For historical local analysis, `pyproject.toml` describes the environment and notebooks 02–04 process separately held inputs. The corpus is not distributed and these results are not reproducible from the public repository alone. Keep observations, notebook outputs, credentials, generated reports, and media out of commits. Only reviewed aggregate releases and expressly synthetic examples belong in this showcase.
 
-Alternatively, you can run the entire pipeline from Step 2 onwards in one go using the pipeline script:
+## License
 
-```bash
-# On Windows (avoids emoji console crashes)
-$env:PYTHONIOENCODING="utf-8"; uv run python scripts/run_pipeline.py
-
-# On macOS/Linux
-uv run python scripts/run_pipeline.py
-```
-
-## 5. Key Visualizations & Results
-
-Below are key visualizations and takeaways extracted from the final dataset of **6,137 unique English, Tagalog, and Taglish comments** harvested across the 67 video targets. These findings are synthesized into the [final video script](docs/video-script.md).
-
-### 5.1. Sentiment Distribution
-
-Using `twitter-xlm-roberta-base-sentiment`, the overall sentiment breakdown reveals a highly contested online discourse rather than passive aesthetic enjoyment:
-
-<p align="center">
-  <img src="outputs/plots/sentiment_distribution.png" alt="Sentiment Distribution" width="70%">
-</p>
-
-- **Neutral (35.8%)**: Educational remarks, ingredient questions, botanical comparisons, and simple culinary descriptions.
-- **Negative (33.8%)**: Backlash against mispronunciations (e.g. "oob"), frustration over cultural gentrification (the "matcha-fication" of ube), and socioeconomic critiques regarding the neglect of local Filipino farmers.
-- **Positive (30.4%)**: Cultural pride, food enjoyment, culinary advocacy, and welcoming foreigners attempting to try or cook traditional desserts.
-
-### 5.2. Topic Clustering (K=7, TF-IDF + LSA)
-
-Unsupervised K-Means clustering identifies seven distinct thematic arenas:
-
-| Cluster       | Core Theme                             | Gastronationalist Implication                                                                                                                     |
-| :------------ | :------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Cluster 0** | **Pronunciation Correction**           | Language as a gatekeeper of cultural respect. Commenters actively correct foreigners to preserve authentic naming (`oohbeh` vs. `oob`).           |
-| **Cluster 1** | **Mainstream Catch-All & Economy**     | Focuses on socioeconomic realities, criticizing domestic agricultural neglect, farmer exploitation, and local shortages amidst global popularity. |
-| **Cluster 2** | **Appreciation & Labor**               | Global culinary enjoyment paired with notes on how labor-intensive traditional ube halaya prep actually is.                                       |
-| **Cluster 3** | **"Oob" Backlash & Memes**             | Highly emotional defensive reactions and memes targeting viral mispronunciations.                                                                 |
-| **Cluster 4** | **"Matcha-fication" & Gentrification** | Anxieties that ube will be gentrified by corporate entities (e.g., Starbucks) without cultural recognition or returns.                            |
-| **Cluster 5** | **Culinary Boundaries (Ube vs. Taro)** | Actively resisting cheap commercial substitutions of ube with taro powder and purple dye.                                                         |
-| **Cluster 6** | **Botanical & Technical Accuracy**     | Educational correction clarifying that ube is a purple yam (`Dioscorea alata`), not a sweet potato or taro.                                       |
-
-Here is the distribution of sentiment across these clusters:
-
-<p align="center">
-  <img src="outputs/clusters/cluster_sentiment_stacked.png" alt="Sentiment Stacked by Cluster" width="80%">
-</p>
-
-### 5.3. Phrase Frequencies (N-Grams)
-
-Examining multi-word phrases (bigrams/trigrams) highlights the primary linguistic markers:
-
-<p align="center">
-  <img src="outputs/plots/word_frequency_bigrams.png" alt="Bigram Frequencies" width="90%">
-</p>
-
-- **Cultural Authenticity**: Phrases like `ube halaya`, `purple yam`, and `filipino dessert` assert cultural roots.
-- **Commercialization & Substitution**: Phrases like `taro taste` and `matcha latte` signal discussions around flavor boundaries and product gentrification.
-
-### 5.4. Reply Sentiment Dynamics
-
-A sentiment transition matrix tracks the relationship between parent comments and their nested replies, illustrating how conflict is negotiated:
-
-<p align="center">
-  <img src="outputs/plots/reply_sentiment_heatmap.png" alt="Reply Sentiment Heatmap" width="70%">
-</p>
-
-- **Negative Parent Trigger**: Negative parents generate the highest rate of negative replies (45.3%), showing that criticism or cultural friction sparks intense digital defensiveness or correction.
-- **Positive Parent Synergy**: Positive parent comments are met with positive replies (45.9%), reflecting supportive spaces where digital gastronationalism acts as a source of community bonding and soft power.
-
-For more detailed qualitative analysis and specific comment samples from each cluster, see [outputs/docs/cluster_insights.md](outputs/docs/cluster_insights.md).
-
-## 6. NLP Methodology & Model
-
-- **Sentiment Model**: CardiffNLP's [twitter-xlm-roberta-base-sentiment](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment) is a multilingual XLM-RoBERTa transformer fine-tuned on ~198M multilingual tweets. It handles mixed-language text (such as code-switching Taglish common in Filipino online spaces) much more robustly than English-only Lexicon models (e.g., VADER).
-- **Language Support**: Filters inputs using `lingua-language-detector` set to retain `ENGLISH` and `TAGALOG` text, ensuring unrelated foreign commentary (e.g., Indonesian, Spanish, Portuguese) does not pollute the dataset.
-
-## 7. License
-
-This project is licensed under the **Apache License 2.0**. See the [LICENSE](LICENSE) file for the full text.
+The repository code is Apache-2.0; see [LICENSE](LICENSE). That license grants no rights to third-party comments, translations, images, or videos. No third-party media is included in the corrected showcase tree.
